@@ -1,0 +1,24 @@
+{
+  "name": "qgen",
+  "version": "0.0.1",
+  "description": "Generate files from templates",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/saneef/qgen.git"
+  },
+  "keywords": [
+    "generator",
+    "templates",
+    "files"
+  ],
+  "author": "Saneef Ansari <hello@saneef.com> (https://saneef.com)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/saneef/qgen/issues"
+  },
+  "homepage": "https://github.com/saneef/qgen#readme"
+}
