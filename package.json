@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "Generate files from templates",
   "bin": {
-    "qgen": "cli.js"
+    "qgen": "./bin/cli.js"
   },
   "scripts": {
     "unit-test": "ava",
