@@ -58,5 +58,12 @@ slug: hello-world
 
 qGen uses [handlebars](http://handlebarsjs.com) to render the template files.
 
+## Feature to be implemented
+
+- [ ] variable in filenames
+- [ ] Use date and other dynamic data for variables
+- [ ] ability to plugin [helpers](https://handlebarsjs.com/expressions.html#helpers)
+
 ## License
+
 MIT © [Saneef Ansari](https://saneef.com)
