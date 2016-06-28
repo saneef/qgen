@@ -1,3 +1,6 @@
+/test/fixtures/**/build/
+.DS_Store
+
 # Logs
 logs
 *.log
