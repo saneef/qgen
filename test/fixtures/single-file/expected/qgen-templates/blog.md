@@ -1,0 +1,4 @@
+---
+title: {{title}}
+slug: {{slug}}
+---

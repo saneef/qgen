@@ -2,15 +2,17 @@
   "name": "qgen",
   "version": "0.0.1",
   "description": "Generate files from templates",
-  "main": "index.js",
+  "bin": {
+    "qgen": "cli.js"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "unit-test": "ava",
+    "lint": "xo",
+    "test": "npm run lint && npm run unit-test"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+ssh://git@github.com/saneef/qgen.git"
-  },
+  "repository": "saneef/qgen",
   "keywords": [
+    "cli",
     "generator",
     "templates",
     "files"
@@ -20,5 +22,24 @@
   "bugs": {
     "url": "https://github.com/saneef/qgen/issues"
   },
-  "homepage": "https://github.com/saneef/qgen#readme"
+  "homepage": "https://github.com/saneef/qgen#readme",
+  "dependencies": {
+    "chalk": "^1.1.3",
+    "handlebars": "^4.0.5",
+    "meow": "^3.7.0",
+    "mkdirp": "^0.5.1",
+    "nested-error-stacks": "^1.0.2",
+    "pinkie-promise": "^2.0.1"
+  },
+  "devDependencies": {
+    "assert-dir-equal": "^1.0.1",
+    "ava": "^0.15.2",
+    "cpy": "^4.0.1",
+    "del": "^2.2.1",
+    "execa": "^0.4.0",
+    "xo": "^0.15.1"
+  },
+  "xo": {
+    "esnext": true
+  }
 }
