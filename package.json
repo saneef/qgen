@@ -1,6 +1,6 @@
 {
   "name": "qgen",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Generate files from templates",
   "bin": {
     "qgen": "./bin/cli.js"
