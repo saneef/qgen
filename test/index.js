@@ -11,6 +11,17 @@ const fixturesBasePath = path.join(__dirname, './fixtures/');
 
 // execa('ls', [], {cwd: '../bin/'}).then(r => console.log(r));
 
+const readyBuildFromSrc = name => {
+	const testBase = path.join(fixturesBasePath, name, 'src');
+	const src = './**/*';
+	const dest = '../build';
+
+	// Deletes the previous build folder
+	del.sync(path.join(testBase, dest));
+
+	return copy([src], dest, {parents: true, cwd: testBase, nodir: true});
+};
+
 test('should executes,', t => {
 	return t.notThrows(execa(binPath, [], {cwd: fixturesBasePath}));
 });
@@ -26,14 +37,7 @@ test('should throw error', t => {
 });
 
 test('should generate from a single file', () => {
-	const testBase = path.join(fixturesBasePath, 'single-file/src');
-	const src = './**/*';
-	const dest = '../build';
-
-	// Deletes the previous build folder
-	del.sync(path.join(testBase, dest));
-
-	return copy([src], dest, {parents: true, cwd: testBase, nodir: true}).then(() => {
+	return readyBuildFromSrc('single-file').then(() => {
 		return execa(binPath, ['blog.md', '--title=A fresh title', '--slug=a-fresh-title'], {
 			cwd: path.join(fixturesBasePath, './single-file/build')
 		}).then(() => {
@@ -44,14 +48,7 @@ test('should generate from a single file', () => {
 });
 
 test('should generate from a single file with custom settings', () => {
-	const testBase = path.join(fixturesBasePath, 'single-file-custom-settings/src');
-	const src = './**/*';
-	const dest = '../build';
-
-	// Deletes the previous build folder
-	del.sync(path.join(testBase, dest));
-
-	return copy([src], dest, {parents: true, cwd: testBase, nodir: true}).then(() => {
+	return readyBuildFromSrc('single-file-custom-settings').then(() => {
 		return execa(binPath, ['blog.md', '--directory=my-templates', '--title=A fresh title', '--slug=a-fresh-title'], {
 			cwd: path.join(fixturesBasePath, './single-file-custom-settings/build')
 		}).then(() => {
@@ -62,14 +59,7 @@ test('should generate from a single file with custom settings', () => {
 });
 
 test('should generate from a single file with a destination', () => {
-	const testBase = path.join(fixturesBasePath, 'single-file-with-dest/src');
-	const src = './**/*';
-	const dest = '../build';
-
-	// Deletes the previous build folder
-	del.sync(path.join(testBase, dest));
-
-	return copy([src], dest, {parents: true, cwd: testBase, nodir: true}).then(() => {
+	return readyBuildFromSrc('single-file-with-dest').then(() => {
 		return execa(binPath, ['blog.md', 'today', '--title=A fresh title', '--slug=a-fresh-title'], {
 			cwd: path.join(fixturesBasePath, './single-file-with-dest/build')
 		}).then(() => {
@@ -80,14 +70,7 @@ test('should generate from a single file with a destination', () => {
 });
 
 test('should generate from a folder', () => {
-	const testBase = path.join(fixturesBasePath, 'folder-of-files/src');
-	const src = './**/*';
-	const dest = '../build';
-
-	// Deletes the previous build folder
-	del.sync(path.join(testBase, dest));
-
-	return copy([src], dest, {parents: true, cwd: testBase, nodir: true}).then(() => {
+	return readyBuildFromSrc('folder-of-files').then(() => {
 		return execa(binPath, ['react-component', './Dummy', '--title=Dummy', '--className=dummy'], {
 			cwd: path.join(fixturesBasePath, './folder-of-files/build')
 		}).then(() => {
