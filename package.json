@@ -6,6 +6,7 @@
     "qgen": "./bin/cli.js"
   },
   "scripts": {
+    "watch:test": "npm run unit-test -- -w npm run unit-test -- -w --source './test/fixtures/*/src/**/*' './test/fixutres/*/expected/**/*' './test/*.js'",
     "unit-test": "ava",
     "lint": "xo",
     "test": "npm run lint && npm run unit-test"
