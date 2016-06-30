@@ -1,6 +1,6 @@
 # qGen
 
-[![Build Status](https://travis-ci.org/saneef/qgen.svg?branch=master)](https://travis-ci.org/saneef/qgen)
+[![Build Status](https://travis-ci.org/alarisprime/qgen.svg?branch=master)](https://travis-ci.org/alarisprime/qgen)
 
 qGen generates files and folders from templates. It can generate folder structre as well as file contents.
 
