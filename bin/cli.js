@@ -24,8 +24,8 @@ if (cli.input.length === 0) {
 	cli.showHelp();
 } else {
 	qgen(cli.input[0], cli.input[1], cli.flags)
-		.catch(error => {
-			console.error(error.message);
+		.catch(err => {
+			console.error(err.message);
 			process.exit(1);
 		});
 }
