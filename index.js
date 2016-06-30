@@ -8,9 +8,9 @@ const globby = require('globby');
 const Promise = require('pinkie-promise');
 
 const QGenError = require('./lib/qgen-error');
-const {isFileOrDir} = require('./lib/file-helpers');
-const {promptIfFileExists} = require('./lib/prompt-helpers');
-const {WRITE, OVERWRITE, OVERWRITE_ALL, ABORT} = require('./constants');
+const isFileOrDir = require('./lib/file-helpers').isFileOrDir;
+const promptIfFileExists = require('./lib/prompt-helpers').promptIfFileExists;
+const constants = require('./constants');
 
 const renderFileWithHandlebars = (src, context) => {
 	// encoding is pass as 'utf8' to get the return value as string
@@ -86,12 +86,12 @@ module.exports = (templateName, destination, options) => {
 							});
 						} else {
 							_r = promptIfFileExists(fileObjects[i].dest).then(overwrite => {
-								if (overwrite === 'OVERWRITE_ALL') {
+								if (overwrite === constants.OVERWRITE_ALL) {
 									overwriteAllFiles = true;
 								}
 
-								if (overwrite === 'WRITE' ||
-										overwrite === 'OVERWRITE' ||
+								if (overwrite === constants.WRITE ||
+										overwrite === constants.OVERWRITE ||
 										overwriteAllFiles) {
 									return processTemplate(fileObjects[i].src, fileObjects[i].dest, config).then(() => {
 										return recursivelyProcessFile(i + 1);
@@ -111,12 +111,12 @@ module.exports = (templateName, destination, options) => {
 
 		returnVal = promptIfFileExists(destAbsolutePath).then(overwrite => {
 			let _r;
-			if (overwrite === WRITE ||
-					overwrite === OVERWRITE ||
-					overwrite === OVERWRITE_ALL) {
+			if (overwrite === constants.WRITE ||
+					overwrite === constants.OVERWRITE ||
+					overwrite === constants.OVERWRITE_ALL) {
 				_r = processTemplate(srcAbsolutePath, destAbsolutePath, config);
 			} else {
-				_r = Promise.reject(new QGenError(ABORT));
+				_r = Promise.reject(new QGenError(constants.ABORT));
 			}
 			return _r;
 		});
