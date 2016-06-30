@@ -54,6 +54,17 @@ const renderAndWrite = (src, dest, config) => {
 	return writeToFile(dest, renderedContent);
 };
 
+const renderFilePath = (filePath, options) => {
+	let renderedFilePath = filePath;
+	const filenameRegex = /__([^_\W]+)__/g;
+
+	renderedFilePath = filePath.replace(filenameRegex, (m, p) => {
+		return options[p] ? options[p] : `__${p}__`;
+	});
+
+	return renderedFilePath;
+};
+
 module.exports = (templateName, destination, options) => {
 	const defaultOptions = {
 		dest: destination || './',
@@ -74,7 +85,9 @@ module.exports = (templateName, destination, options) => {
 		})
 			.then(files => {
 				files.map(filePath => {
-					return renderAndWrite(path.join(config.cwd, config.directory, templateName, filePath), path.join(config.cwd, config.dest, filePath), config);
+					const destFilePath = renderFilePath(filePath, config);
+
+					return renderAndWrite(path.join(config.cwd, config.directory, templateName, filePath), path.join(config.cwd, config.dest, destFilePath), config);
 				});
 			});
 	} else if (file === 'file') {
