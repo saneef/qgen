@@ -64,36 +64,46 @@ module.exports = (templateName, destination, options) => {
 			nodir: true
 		})
 			.then(files => {
-				let overWriteAll = false;
-				return Promise.race(files.map(filePath => {
+				let overwriteAllFiles = false;
+				const filesCount = files.length;
+
+				const fileObjects = files.map(filePath => {
 					const destFilePath = generateFilePath(filePath, config);
-					const srcAbsolutePath = path.join(config.cwd, config.directory, templateName, filePath);
-					const destAbsolutePath = path.join(config.cwd, config.dest, destFilePath);
+					return {
+						src: path.join(config.cwd, config.directory, templateName, filePath),
+						dest: path.join(config.cwd, config.dest, destFilePath)
+					};
+				});
 
-					let _r;
+				// This recursive is to make the inquirer prompt work
+				// in sequential. May be there is a better way to do this.
+				function recursivelyProcessFile(i) {
+					let _r = Promise.resolve();
+					if (i < filesCount) {
+						if (overwriteAllFiles) {
+							_r = processTemplate(fileObjects[i].src, fileObjects[i].dest, config).then(() => {
+								return recursivelyProcessFile(i + 1);
+							});
+						} else {
+							_r = promptIfFileExists(fileObjects[i].dest).then(overwrite => {
+								if (overwrite === 'OVERWRITE_ALL') {
+									overwriteAllFiles = true;
+								}
 
-					if (overWriteAll) {
-						_r = processTemplate(srcAbsolutePath, destAbsolutePath, config);
-					} else {
-						_r = promptIfFileExists(destAbsolutePath).then(overwrite => {
-							if (overwrite === OVERWRITE_ALL) {
-								overWriteAll = true;
-							}
-
-							let _r1;
-							if (overwrite === WRITE ||
-									overwrite === OVERWRITE ||
-									overWriteAll) {
-								_r1 = processTemplate(srcAbsolutePath, destAbsolutePath, config);
-							} else {
-								_r1 = Promise.reject(new QGenError(ABORT));
-							}
-							return _r1;
-						});
+								if (overwrite === 'WRITE' ||
+										overwrite === 'OVERWRITE' ||
+										overwriteAllFiles) {
+									return processTemplate(fileObjects[i].src, fileObjects[i].dest, config).then(() => {
+										return recursivelyProcessFile(i + 1);
+									});
+								}
+							});
+						}
 					}
-
 					return _r;
-				}));
+				}
+
+				return recursivelyProcessFile(0);
 			});
 	} else if (file === 'file') {
 		const srcAbsolutePath = path.join(config.cwd, templateRelPath);
