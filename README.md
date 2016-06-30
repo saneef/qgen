@@ -113,6 +113,7 @@ Generated file `./Dummy/Dummy.css`
 ## Feature to be implemented
 
 - [x] variable in filenames
+- [ ] config file, to keep default values and paths
 - [ ] Use date and other dynamic data for variables
 - [ ] ability to plugin [helpers](https://handlebarsjs.com/expressions.html#helpers)
 
