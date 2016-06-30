@@ -6,6 +6,8 @@ const chalk = require('chalk');
 
 const qgen = require('../');
 
+const {ABORT} = require('../constants');
+
 const cli = meow(`
 	${chalk.bold('Usage')}
 		$ qgen <template name> [dest] [arguments] [options]
@@ -25,7 +27,11 @@ if (cli.input.length === 0) {
 } else {
 	qgen(cli.input[0], cli.input[1], cli.flags)
 		.catch(err => {
-			console.error(err.message);
-			process.exit(1);
+			if (err.message === ABORT) {
+				process.exit(0);
+			} else {
+				console.error(err.message);
+				process.exit(1);
+			}
 		});
 }

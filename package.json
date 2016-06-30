@@ -28,6 +28,7 @@
     "chalk": "^1.1.3",
     "globby": "^5.0.0",
     "handlebars": "^4.0.5",
+    "inquirer": "^1.1.0",
     "meow": "^3.7.0",
     "mkdirp": "^0.5.1",
     "nested-error-stacks": "^1.0.2",

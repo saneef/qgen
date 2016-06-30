@@ -7,8 +7,10 @@ const mkdirp = require('mkdirp');
 const globby = require('globby');
 const Promise = require('pinkie-promise');
 
-const {isFileOrDir} = require('./lib/file-helpers.js');
 const QGenError = require('./lib/qgen-error');
+const {isFileOrDir} = require('./lib/file-helpers');
+const {promptIfFileExists} = require('./lib/prompt-helpers');
+const {WRITE, OVERWRITE, OVERWRITE_ALL, ABORT} = require('./constants');
 
 const renderFileWithHandlebars = (src, context) => {
 	// encoding is pass as 'utf8' to get the return value as string
@@ -62,19 +64,54 @@ module.exports = (templateName, destination, options) => {
 			nodir: true
 		})
 			.then(files => {
-				files.map(filePath => {
+				let overWriteAll = false;
+				return Promise.race(files.map(filePath => {
 					const destFilePath = generateFilePath(filePath, config);
 					const srcAbsolutePath = path.join(config.cwd, config.directory, templateName, filePath);
 					const destAbsolutePath = path.join(config.cwd, config.dest, destFilePath);
 
-					return processTemplate(srcAbsolutePath, destAbsolutePath, config);
-				});
+					let _r;
+
+					if (overWriteAll) {
+						_r = processTemplate(srcAbsolutePath, destAbsolutePath, config);
+					} else {
+						_r = promptIfFileExists(destAbsolutePath).then(overwrite => {
+							if (overwrite === OVERWRITE_ALL) {
+								overWriteAll = true;
+							}
+
+							let _r1;
+							if (overwrite === WRITE ||
+									overwrite === OVERWRITE ||
+									overWriteAll) {
+								_r1 = processTemplate(srcAbsolutePath, destAbsolutePath, config);
+							} else {
+								_r1 = Promise.reject(new QGenError(ABORT));
+							}
+							return _r1;
+						});
+					}
+
+					return _r;
+				}));
 			});
 	} else if (file === 'file') {
 		const srcAbsolutePath = path.join(config.cwd, templateRelPath);
 		const destAbsolutePath = path.join(config.cwd, config.dest, templateName);
 
-		returnVal = processTemplate(srcAbsolutePath, destAbsolutePath, config);
+		returnVal = promptIfFileExists(destAbsolutePath).then(overwrite => {
+			let _r;
+			if (overwrite === WRITE ||
+					overwrite === OVERWRITE ||
+					overwrite === OVERWRITE_ALL) {
+				_r = processTemplate(srcAbsolutePath, destAbsolutePath, config);
+			} else {
+				_r = Promise.reject(new QGenError(ABORT));
+			}
+			return _r;
+		});
+
+		return returnVal;
 	} else {
 		returnVal = Promise.reject(new QGenError(`Template '${templateRelPath}' not found.`, file.message, file));
 	}
