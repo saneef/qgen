@@ -1,36 +1,14 @@
 'use strict';
 const fs = require('fs');
 const path = require('path');
-const util = require('util');
+
 const handlebars = require('handlebars');
 const mkdirp = require('mkdirp');
 const globby = require('globby');
-const NestedError = require('nested-error-stacks');
 const Promise = require('pinkie-promise');
 
-function QGenError(message, nested) {
-	NestedError.call(this, message, nested);
-	Object.assign(this, nested, {message});
-}
-
-util.inherits(QGenError, NestedError);
-QGenError.prototype.name = 'QGenError';
-
-const isFileOrDir = filePath => {
-	let fsStat;
-	try {
-		fsStat = fs.statSync(filePath);
-	} catch (err) {
-		return err;
-	}
-
-	let r = 'file';
-	if (fsStat.isDirectory()) {
-		r = 'directory';
-	}
-
-	return r;
-};
+const {isFileOrDir} = require('./lib/file-helpers.js');
+const QGenError = require('./lib/qgen-error');
 
 const renderFileWithHandlebars = (src, context) => {
 	// encoding is pass as 'utf8' to get the return value as string
@@ -49,12 +27,12 @@ const writeToFile = (filePath, content) => {
 	return Promise.resolve();
 };
 
-const renderAndWrite = (src, dest, config) => {
+const processTemplate = (src, dest, config) => {
 	const renderedContent = renderFileWithHandlebars(src, config);
 	return writeToFile(dest, renderedContent);
 };
 
-const renderFilePath = (filePath, options) => {
+const generateFilePath = (filePath, options) => {
 	let renderedFilePath = filePath;
 	const filenameRegex = /__([^_\W]+)__/g;
 
@@ -85,13 +63,18 @@ module.exports = (templateName, destination, options) => {
 		})
 			.then(files => {
 				files.map(filePath => {
-					const destFilePath = renderFilePath(filePath, config);
+					const destFilePath = generateFilePath(filePath, config);
+					const srcAbsolutePath = path.join(config.cwd, config.directory, templateName, filePath);
+					const destAbsolutePath = path.join(config.cwd, config.dest, destFilePath);
 
-					return renderAndWrite(path.join(config.cwd, config.directory, templateName, filePath), path.join(config.cwd, config.dest, destFilePath), config);
+					return processTemplate(srcAbsolutePath, destAbsolutePath, config);
 				});
 			});
 	} else if (file === 'file') {
-		returnVal = renderAndWrite(path.join(config.cwd, templateRelPath), path.join(config.cwd, config.dest, templateName), config);
+		const srcAbsolutePath = path.join(config.cwd, templateRelPath);
+		const destAbsolutePath = path.join(config.cwd, config.dest, templateName);
+
+		returnVal = processTemplate(srcAbsolutePath, destAbsolutePath, config);
 	} else {
 		returnVal = Promise.reject(new QGenError(`Template '${templateRelPath}' not found.`, file.message, file));
 	}
