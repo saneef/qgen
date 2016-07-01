@@ -148,4 +148,4 @@ $ qgen blog.md --filename=`date "+%Y-%m-%d"`
 
 ## License
 
-MIT © [Saneef Ansari](https://saneef.com)
+MIT © Alaris Prime, LLC
