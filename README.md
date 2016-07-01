@@ -18,18 +18,17 @@ Some scenarios where qGen can come handy for you:
 ## Usage
 
 ```bash
-Generate files from templates
-
 Usage
 	$ qgen <template name> [dest] [arguments] [options]
 
 Options
 	--directory=<dir>	Templates directory # Default: ./gqen-templates
+	--config=<path>	Path to the JSON config file # Default: ./qgen.json
 
 Examples
-	$ qgen post # generates the post template in the current folder
-	$ qgen post ./pages # generates the post template into ./pages
-	$ qgen post ./pages --page-title "Hello World" # generates the post template in inside ./pages with data field pageTitle="Hello World" to the template rendering engine
+	$ qgen post ${chalk.dim('# generates the post template in the current folder')}
+	$ qgen post ./pages ${chalk.dim('# generates the post template inside ./pages')}
+	$ qgen post ./pages --page-title "Hello World" ${chalk.dim('# generates the post template in inside ./pages with data field pageTitle="Hello World" to the template rendering engine')}
 ```
 
 In your project folder (where packages.json is present), keep your templates files inside `qgen-templates`.
@@ -112,11 +111,39 @@ Generated file `./Dummy/Dummy.css`
 
 ```
 
+## ‘qgen.json’, The configfile
+
+You can keep keep your configuration file, `gqen` with settings like template directory, default destination,…
+
+```javascript
+{
+	"directory": "./my-templates", // Default: "./qgen-templates"
+	"dest": "./pages", // Default: "./"
+	"templates": { // Default: []
+		"blog.md": { // These configuration will be passed while compiling template 'blog.md'
+			"title": "A Fresh Title",
+			"slug": "a-fresh-title"
+		}
+	}
+}
+```
+
+
+## Tips & Tricks
+
+### Want to set a variable today’s date?
+
+Make use of the system `date` command.
+
+```bash
+$ qgen blog.md --filename=`date "+%Y-%m-%d"`
+```
+
 ## Feature to be implemented
 
 - [x] variable in filenames
-- [ ] config file, to keep default values and paths
-- [ ] Use date and other dynamic data for variables
+- [x] config file, to keep default values and paths
+- [ ] Use date and other dynamic data for variables, for now refer [Tips & Tricks](#tips-&-tricks) abof
 - [ ] ability to add plugin [helpers](https://handlebarsjs.com/expressions.html#helpers)
 
 ## License
