@@ -14,6 +14,7 @@ const cli = meow(`
 
 	${chalk.bold('Options')}
 	--directory=<dir>	Templates directory # Default: ./gqen-templates
+	--config=<path>	Path to the JSON config file # Default: ./qgen.json
 
 	${chalk.bold('Examples')}
 		$ qgen post ${chalk.dim('# generates the post template in the current folder')}

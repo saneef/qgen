@@ -29,8 +29,14 @@ const writeToFile = (filePath, content) => {
 	return Promise.resolve();
 };
 
-const processTemplate = (src, dest, config) => {
-	const renderedContent = renderFileWithHandlebars(src, config);
+const processTemplate = (name, src, dest, config) => {
+	let localConfig = Object.assign({}, config);
+
+	if (config.templates && config.templates[name]) {
+		localConfig = Object.assign({}, config.templates[name], config, {templates: undefined});
+	}
+
+	const renderedContent = renderFileWithHandlebars(src, localConfig);
 	return writeToFile(dest, renderedContent);
 };
 
@@ -49,14 +55,29 @@ module.exports = (templateName, destination, options) => {
 	const defaultOptions = {
 		dest: destination || './',
 		cwd: process.cwd(),
-		directory: 'qgen-templates'
+		directory: 'qgen-templates',
+		config: './qgen.json'
 	};
 
-	const config = Object.assign(defaultOptions, options);
+	let fileOptions = {};
+	let configfilePath = path.join(defaultOptions.cwd, defaultOptions.config);
+	if (options.config) {
+		configfilePath = options.config;
+	}
+	// Read the configfile if exists
+	if (isFileOrDir(configfilePath) === 'file') {
+		fileOptions = require(configfilePath);
+	}
 
-	const templateRelPath = path.join(config.directory, templateName);
+	const config = Object.assign(defaultOptions, fileOptions, options);
+
+	if (isFileOrDir(config.directory) !== 'directory') {
+		return Promise.reject(new QGenError(`qGen templates directory '${config.directory}' not found.`));
+	}
 
 	let returnVal;
+	const templateRelPath = path.join(config.directory, templateName);
+
 	const file = isFileOrDir(path.join(config.cwd, templateRelPath));
 	if (file === 'directory') {
 		returnVal = globby(['**/*'], {
@@ -70,6 +91,7 @@ module.exports = (templateName, destination, options) => {
 				const fileObjects = files.map(filePath => {
 					const destFilePath = generateFilePath(filePath, config);
 					return {
+						templateName,
 						src: path.join(config.cwd, config.directory, templateName, filePath),
 						dest: path.join(config.cwd, config.dest, destFilePath)
 					};
@@ -81,7 +103,7 @@ module.exports = (templateName, destination, options) => {
 					let _r = Promise.resolve();
 					if (i < filesCount) {
 						if (overwriteAllFiles) {
-							_r = processTemplate(fileObjects[i].src, fileObjects[i].dest, config).then(() => {
+							_r = processTemplate(fileObjects[i].templateName, fileObjects[i].src, fileObjects[i].dest, config).then(() => {
 								return recursivelyProcessFile(i + 1);
 							});
 						} else {
@@ -93,7 +115,7 @@ module.exports = (templateName, destination, options) => {
 								if (overwrite === constants.WRITE ||
 										overwrite === constants.OVERWRITE ||
 										overwriteAllFiles) {
-									return processTemplate(fileObjects[i].src, fileObjects[i].dest, config).then(() => {
+									return processTemplate(fileObjects[i].templateName, fileObjects[i].src, fileObjects[i].dest, config).then(() => {
 										return recursivelyProcessFile(i + 1);
 									});
 								}
@@ -114,7 +136,7 @@ module.exports = (templateName, destination, options) => {
 			if (overwrite === constants.WRITE ||
 					overwrite === constants.OVERWRITE ||
 					overwrite === constants.OVERWRITE_ALL) {
-				_r = processTemplate(srcAbsolutePath, destAbsolutePath, config);
+				_r = processTemplate(templateName, srcAbsolutePath, destAbsolutePath, config);
 			} else {
 				_r = Promise.reject(new QGenError(constants.ABORT));
 			}
