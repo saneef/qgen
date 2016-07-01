@@ -131,7 +131,7 @@ You can keep keep your configuration file, `gqen` with settings like template di
 
 ## Tips & Tricks
 
-### Want to set a variable today’s date?
+### Want to set a variable to today’s date?
 
 Make use of the system `date` command.
 
