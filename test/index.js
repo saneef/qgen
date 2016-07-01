@@ -49,7 +49,7 @@ test('should generate from a single file', () => {
 
 test('should generate from a single file with custom settings', () => {
 	return readyBuildFromSrc('single-file-custom-settings').then(() => {
-		return execa(binPath, ['blog.md', '--directory=my-templates', '--title=A fresh title', '--slug=a-fresh-title'], {
+		return execa(binPath, ['blog.md'], {
 			cwd: path.join(fixturesBasePath, './single-file-custom-settings/build')
 		}).then(() => {
 			return folderEquals(path.join(fixturesBasePath, 'single-file-custom-settings/build'),

@@ -1,4 +1,4 @@
 ---
-title: A fresh title
+title: A Fresh Title
 slug: a-fresh-title
 ---
