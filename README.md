@@ -9,7 +9,7 @@ Some scenarios where qGen can come handy for you:
 - Generate the file for you next Jekyll blog post.
 - Generate files for a new React component in your current project
 
-![](/media//media/qgen-example-usge.gif)
+![](/media/qgen-example-usge.gif)
 
 ## Install
 
