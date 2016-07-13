@@ -26,9 +26,9 @@ Options
 	--config=<path>	Path to the JSON config file # Default: ./qgen.json
 
 Examples
-	$ qgen post ${chalk.dim('# generates the post template in the current folder')}
-	$ qgen post ./pages ${chalk.dim('# generates the post template inside ./pages')}
-	$ qgen post ./pages --page-title "Hello World" ${chalk.dim('# generates the post template in inside ./pages with data field pageTitle="Hello World" to the template rendering engine')}
+	$ qgen post # generates the post template in the current folder
+	$ qgen post ./pages # generates the post template inside ./pages
+	$ qgen post ./pages --page-title "Hello World" # generates the post template in inside ./pages with data field pageTitle="Hello World" to the template rendering engine
 ```
 
 In your project folder (where packages.json is present), keep your templates files inside `qgen-templates`.
