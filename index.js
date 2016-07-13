@@ -29,14 +29,8 @@ const writeToFile = (filePath, content) => {
 	return Promise.resolve();
 };
 
-const processTemplate = (name, src, dest, config) => {
-	let localConfig = Object.assign({}, config);
-
-	if (config.templates && config.templates[name]) {
-		localConfig = Object.assign({}, config.templates[name], config, {templates: undefined});
-	}
-
-	const renderedContent = renderFileWithHandlebars(src, localConfig);
+const processTemplate = (src, dest, config) => {
+	const renderedContent = renderFileWithHandlebars(src, config);
 	return writeToFile(dest, renderedContent);
 };
 
@@ -49,6 +43,16 @@ const generateFilePath = (filePath, options) => {
 	});
 
 	return renderedFilePath;
+};
+
+const generateTemplateConfig = (config, templateName) => {
+	let templateConfig = config;
+
+	if (config.templates && config.templates[templateName]) {
+		templateConfig = Object.assign({}, config, config.templates[templateName], {templates: undefined});
+	}
+
+	return templateConfig;
 };
 
 module.exports = (templateName, destination, options) => {
@@ -90,10 +94,12 @@ module.exports = (templateName, destination, options) => {
 
 				const fileObjects = files.map(filePath => {
 					const destFilePath = generateFilePath(filePath, config);
+					const templateConfig = generateTemplateConfig(config, templateName);
+
 					return {
-						templateName,
-						src: path.join(config.cwd, config.directory, templateName, filePath),
-						dest: path.join(config.cwd, config.dest, destFilePath)
+						src: path.join(templateConfig.cwd, templateConfig.directory, templateName, filePath),
+						dest: path.join(templateConfig.cwd, templateConfig.dest, destFilePath),
+						config: templateConfig
 					};
 				});
 
@@ -103,7 +109,7 @@ module.exports = (templateName, destination, options) => {
 					let _r = Promise.resolve();
 					if (i < filesCount) {
 						if (overwriteAllFiles) {
-							_r = processTemplate(fileObjects[i].templateName, fileObjects[i].src, fileObjects[i].dest, config).then(() => {
+							_r = processTemplate(fileObjects[i].src, fileObjects[i].dest, fileObjects[i].config).then(() => {
 								return recursivelyProcessFile(i + 1);
 							});
 						} else {
@@ -115,7 +121,7 @@ module.exports = (templateName, destination, options) => {
 								if (overwrite === constants.WRITE ||
 										overwrite === constants.OVERWRITE ||
 										overwriteAllFiles) {
-									return processTemplate(fileObjects[i].templateName, fileObjects[i].src, fileObjects[i].dest, config).then(() => {
+									return processTemplate(fileObjects[i].src, fileObjects[i].dest, fileObjects[i].config).then(() => {
 										return recursivelyProcessFile(i + 1);
 									});
 								}
@@ -128,15 +134,16 @@ module.exports = (templateName, destination, options) => {
 				return recursivelyProcessFile(0);
 			});
 	} else if (file === 'file') {
-		const srcAbsolutePath = path.join(config.cwd, templateRelPath);
-		const destAbsolutePath = path.join(config.cwd, config.dest, templateName);
+		const templateConfig = generateTemplateConfig(config, templateName);
+		const srcAbsolutePath = path.join(templateConfig.cwd, templateRelPath);
+		const destAbsolutePath = path.join(templateConfig.cwd, templateConfig.dest, templateName);
 
 		returnVal = promptIfFileExists(destAbsolutePath).then(overwrite => {
 			let _r;
 			if (overwrite === constants.WRITE ||
 					overwrite === constants.OVERWRITE ||
 					overwrite === constants.OVERWRITE_ALL) {
-				_r = processTemplate(templateName, srcAbsolutePath, destAbsolutePath, config);
+				_r = processTemplate(srcAbsolutePath, destAbsolutePath, templateConfig);
 			} else {
 				_r = Promise.reject(new QGenError(constants.ABORT));
 			}

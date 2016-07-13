@@ -1,10 +1,10 @@
 {
 	"directory": "./my-templates",
-	"dest": "./pages",
 	"templates": {
 		"blog.md": {
 			"title": "A Fresh Title",
-			"slug": "a-fresh-title"
+			"slug": "a-fresh-title",
+			"dest": "./pages"
 		}
 	}
 }
