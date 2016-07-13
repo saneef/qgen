@@ -118,11 +118,12 @@ You can keep keep your configuration file, `gqen` with settings like template di
 ```javascript
 {
 	"directory": "./my-templates", // Default: "./qgen-templates"
-	"dest": "./pages", // Default: "./"
+	"dest": "./pages", // Destination for all templates. Default: "./"
 	"templates": { // Default: []
 		"blog.md": { // These configuration will be passed while compiling template 'blog.md'
 			"title": "A Fresh Title",
-			"slug": "a-fresh-title"
+			"slug": "a-fresh-title",
+			"dest": "./blog-pages" // Overrides the 'dest' for this template. Default: undefined
 		}
 	}
 }
