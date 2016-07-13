@@ -1,0 +1,9 @@
+{
+	"templates": {
+		"blog.md": {
+			"title": "Some Title",
+			"slug": "some-title",
+			"dest": "./pages"
+		}
+	}
+}

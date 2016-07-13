@@ -12,6 +12,8 @@ const isFileOrDir = require('./lib/file-helpers').isFileOrDir;
 const promptIfFileExists = require('./lib/prompt-helpers').promptIfFileExists;
 const constants = require('./constants');
 
+const DEFAULT_DESTINATION = './';
+
 const renderFileWithHandlebars = (src, context) => {
 	// encoding is pass as 'utf8' to get the return value as string
 	const fileContents = fs.readFileSync(src, 'utf8');
@@ -49,7 +51,21 @@ const generateTemplateConfig = (config, templateName) => {
 	let templateConfig = config;
 
 	if (config.templates && config.templates[templateName]) {
-		templateConfig = Object.assign({}, config, config.templates[templateName], {templates: undefined});
+		const overrides = {
+			templates: undefined
+		};
+
+		if (config.templates &&
+				config.templates[templateName] &&
+				config.templates[templateName].dest) {
+			overrides.dest = config.templates[templateName].dest;
+		}
+
+		if (config.dest !== DEFAULT_DESTINATION) {
+			overrides.dest = config.dest;
+		}
+
+		templateConfig = Object.assign({}, config.templates[templateName], config, overrides);
 	}
 
 	return templateConfig;
@@ -57,7 +73,7 @@ const generateTemplateConfig = (config, templateName) => {
 
 module.exports = (templateName, destination, options) => {
 	const defaultOptions = {
-		dest: destination || './',
+		dest: destination || DEFAULT_DESTINATION,
 		cwd: process.cwd(),
 		directory: 'qgen-templates',
 		config: './qgen.json'
