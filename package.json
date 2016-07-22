@@ -26,7 +26,7 @@
   "homepage": "https://github.com/alarisprime/qgen#readme",
   "dependencies": {
     "chalk": "^1.1.3",
-    "globby": "^5.0.0",
+    "globby": "^6.0.0",
     "handlebars": "^4.0.5",
     "inquirer": "^1.1.0",
     "meow": "^3.7.0",
