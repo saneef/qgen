@@ -1,4 +1,4 @@
-![qgen logo](/media/qgen-logo.svg)
+![qgen logo](/media/qgen-logo.png)
 
 [![Build Status](https://travis-ci.org/alarisprime/qgen.svg?branch=master)](https://travis-ci.org/alarisprime/qgen)
 
