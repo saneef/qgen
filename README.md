@@ -39,7 +39,7 @@ q·gen uses [handlebars](http://handlebarsjs.com) to render the template files. 
 
 The data arguments passed to CLI will be converted in camel case and passed to the template rendering enging. Eg `--page-title` can be access in template using `pageTitle`.
 
-You can also use the data values to generate filename. Eg. with data `--page-title` can be used to render a filename `__pageTitle__.md`. Eg. `--page-title=today` can be used to render `__pageTitle__.md → today.md`. **Note: Data variables can be used only for files kept inside a folder. Refer: [Template with multiple files](#template-with-multiple-files)**
+You can also use the data values to generate filename. Eg. with data `--page-title` can be used to render a filename `__pageTitle__.md`. Eg. `--page-title=today` can be used to render `__pageTitle__.md → today.md`. Data variables can be used only for files kept inside a folder. Read more on it under [Template with multiple files](#template-with-multiple-files).
 
 ### Example
 
@@ -144,7 +144,7 @@ $ qgen blog.md --filename=`date "+%Y-%m-%d"`
 
 - [x] variable in filenames
 - [x] config file, to keep default values and paths
-- [ ] Use date and other dynamic data for variables, for now refer [Tips & Tricks](#tips--tricks)
+- [ ] Use date and other dynamic data for variables. For now, read [Tips & Tricks](#tips--tricks)
 - [ ] ability to add plugin [helpers](https://handlebarsjs.com/expressions.html#helpers)
 
 ## License
