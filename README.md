@@ -2,9 +2,9 @@
 
 [![Build Status](https://travis-ci.org/alarisprime/qgen.svg?branch=master)](https://travis-ci.org/alarisprime/qgen)
 
-qGen generates files and folders from templates. It can generate folder structre as well as file contents.
+q·gen generates files and folders from templates. It can generate folder structre as well as file contents.
 
-Some scenarios where qGen can come handy for you:
+Some scenarios where q·gen can come handy for you:
 
 - Generate the file for you next Jekyll blog post.
 - Generate files for a new React component in your current project
@@ -33,9 +33,9 @@ Examples
 
 In your project folder (where packages.json is present), keep your templates files inside `qgen-templates`.
 
-## qGen Templates
+## q·gen Templates
 
-qGen uses [handlebars](http://handlebarsjs.com) to render the template files. So use handlebars syntax to write you generator files.
+q·gen uses [handlebars](http://handlebarsjs.com) to render the template files. So use handlebars syntax to write you generator files.
 
 The data arguments passed to CLI will be converted in camel case and passed to the template rendering enging. Eg `--page-title` can be access in template using `pageTitle`.
 
