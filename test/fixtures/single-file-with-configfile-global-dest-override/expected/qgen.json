@@ -1,9 +1,9 @@
 {
+	"dest": "./pages",
 	"templates": {
 		"blog.md": {
 			"title": "Some Title",
-			"slug": "some-title",
-			"dest": "./pages"
+			"slug": "some-title"
 		}
 	}
 }
