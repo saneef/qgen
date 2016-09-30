@@ -145,7 +145,7 @@ $ qgen blog.md --filename=`date "+%Y-%m-%d"`
 - [x] variable in filenames
 - [x] config file, to keep default values and paths
 - [ ] Use date and other dynamic data for variables. For now, read [Tips & Tricks](#tips--tricks)
-- [ ] ability to add plugin [helpers](https://handlebarsjs.com/expressions.html#helpers)
+- [ ] ability to add plugin [helpers](http://handlebarsjs.com/expressions.html#helpers)
 
 ## License
 
