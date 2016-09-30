@@ -9,8 +9,6 @@ const folderEquals = require('assert-dir-equal');
 const binPath = path.join(__dirname, '../bin/cli.js');
 const fixturesBasePath = path.join(__dirname, './fixtures/');
 
-// execa('ls', [], {cwd: '../bin/'}).then(r => console.log(r));
-
 const readyBuildFromSrc = name => {
 	const testBase = path.join(fixturesBasePath, name, 'src');
 	const src = './**/*';
@@ -47,24 +45,35 @@ test('should generate from a single file', () => {
 	});
 });
 
-test('should generate from a single file with custom settings', () => {
-	return readyBuildFromSrc('single-file-custom-settings').then(() => {
+test('should generate from a single file with settings from configfile', () => {
+	return readyBuildFromSrc('single-file-with-configfile').then(() => {
 		return execa(binPath, ['blog.md'], {
-			cwd: path.join(fixturesBasePath, './single-file-custom-settings/build')
+			cwd: path.join(fixturesBasePath, './single-file-with-configfile/build')
 		}).then(() => {
-			return folderEquals(path.join(fixturesBasePath, 'single-file-custom-settings/build'),
-				path.join(fixturesBasePath, 'single-file-custom-settings/expected'));
+			return folderEquals(path.join(fixturesBasePath, 'single-file-with-configfile/build'),
+				path.join(fixturesBasePath, 'single-file-with-configfile/expected'));
 		});
 	});
 });
 
-test('should generate from a single file with a destination', () => {
-	return readyBuildFromSrc('single-file-with-dest').then(() => {
+test('should generate destination from CLI, overriding destination from configfile', () => {
+	return readyBuildFromSrc('single-file-with-configfile-dest-override').then(() => {
 		return execa(binPath, ['blog.md', 'today', '--title=A fresh title', '--slug=a-fresh-title'], {
-			cwd: path.join(fixturesBasePath, './single-file-with-dest/build')
+			cwd: path.join(fixturesBasePath, './single-file-with-configfile-dest-override/build')
 		}).then(() => {
-			return folderEquals(path.join(fixturesBasePath, 'single-file-with-dest/build'),
-				path.join(fixturesBasePath, 'single-file-with-dest/expected'));
+			return folderEquals(path.join(fixturesBasePath, 'single-file-with-configfile-dest-override/build'),
+				path.join(fixturesBasePath, 'single-file-with-configfile-dest-override/expected'));
+		});
+	});
+});
+
+test('should generate destination from CLI, overriding global destination from configfile', () => {
+	return readyBuildFromSrc('single-file-with-configfile-global-dest-override').then(() => {
+		return execa(binPath, ['blog.md', 'today', '--title=A fresh title', '--slug=a-fresh-title'], {
+			cwd: path.join(fixturesBasePath, './single-file-with-configfile-global-dest-override/build')
+		}).then(() => {
+			return folderEquals(path.join(fixturesBasePath, 'single-file-with-configfile-global-dest-override/build'),
+				path.join(fixturesBasePath, 'single-file-with-configfile-global-dest-override/expected'));
 		});
 	});
 });
