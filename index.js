@@ -99,6 +99,10 @@ module.exports = (templateName, destination, options) => {
 	const templateRelPath = path.join(config.directory, templateName);
 
 	const file = isFileOrDir(path.join(config.cwd, templateRelPath));
+
+	// overwrite current config with template specific config
+	const templateConfig = generateTemplateConfig(config, templateName);
+
 	if (file === 'directory') {
 		returnVal = globby(['**/*'], {
 			cwd: path.join(config.cwd, templateRelPath),
@@ -110,7 +114,6 @@ module.exports = (templateName, destination, options) => {
 
 				const fileObjects = files.map(filePath => {
 					const destFilePath = generateFilePath(filePath, config);
-					const templateConfig = generateTemplateConfig(config, templateName);
 
 					return {
 						src: path.join(templateConfig.cwd, templateConfig.directory, templateName, filePath),
@@ -150,7 +153,6 @@ module.exports = (templateName, destination, options) => {
 				return recursivelyProcessFile(0);
 			});
 	} else if (file === 'file') {
-		const templateConfig = generateTemplateConfig(config, templateName);
 		const srcAbsolutePath = path.join(templateConfig.cwd, templateRelPath);
 		const destAbsolutePath = path.join(templateConfig.cwd, templateConfig.dest, templateName);
 
