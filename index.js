@@ -73,7 +73,7 @@ const generateTemplateConfig = (config, templateName) => {
 
 module.exports = (templateName, destination, options) => {
 	const defaultOptions = {
-		dest: destination || DEFAULT_DESTINATION,
+		dest: DEFAULT_DESTINATION,
 		cwd: process.cwd(),
 		directory: 'qgen-templates',
 		config: './qgen.json'
@@ -102,6 +102,11 @@ module.exports = (templateName, destination, options) => {
 
 	// overwrite current config with template specific config
 	const templateConfig = generateTemplateConfig(config, templateName);
+
+	// override dest with dest from CLI
+	if (destination) {
+		templateConfig.dest = destination;
+	}
 
 	if (file === 'directory') {
 		returnVal = globby(['**/*'], {
