@@ -1,0 +1,6 @@
+{
+  "name": "q·gen",
+  "tagline": "q·gen generates files and folders from templates",
+  "body": "![Usage Example](https://github.com/alarisprime/qgen/raw/master/media/qgen-example-usge.gif)\r\n\r\n### Installation\r\n\r\n```bash\r\n$ npm install -g qgen \r\n```\r\n\r\n### User Guide\r\n\r\n[How to use q·gen?](https://github.com/alarisprime/qgen/blob/master/README.md#usage)\r\n\r\n\r\n### Authors and Contributors\r\nSaneef Ansari (@saneef)",
+  "note": "Don't delete this file! It's used internally to help with page regeneration."
+}
