@@ -50,6 +50,8 @@ const generateFilePath = (filePath, options) => {
 const generateTemplateConfig = (config, templateName) => {
 	let templateConfig = config;
 
+	// Process the additional config specific
+	// to the given template
 	if (config.templates && config.templates[templateName]) {
 		const overrides = {
 			templates: undefined
@@ -79,17 +81,17 @@ module.exports = (templateName, destination, options) => {
 		config: './qgen.json'
 	};
 
-	let fileOptions = {};
+	let configfileOptions = {};
 	let configfilePath = path.join(defaultOptions.cwd, defaultOptions.config);
 	if (options.config) {
 		configfilePath = options.config;
 	}
 	// Read the configfile if exists
 	if (isFileOrDir(configfilePath) === 'file') {
-		fileOptions = require(configfilePath);
+		configfileOptions = require(configfilePath);
 	}
 
-	const config = Object.assign(defaultOptions, fileOptions, options);
+	const config = Object.assign(defaultOptions, configfileOptions, options);
 
 	if (isFileOrDir(config.directory) !== 'directory') {
 		return Promise.reject(new QGenError(`qGen templates directory '${config.directory}' not found.`));
