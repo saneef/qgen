@@ -1,5 +1,6 @@
 /test/fixtures/**/build/
 .DS_Store
+.nyc_output/
 
 # Logs
 logs
