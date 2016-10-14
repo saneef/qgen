@@ -88,7 +88,7 @@ module.exports = (templateName, destination, options) => {
 	}
 	// Read the configfile if exists
 	if (isFileOrDir(configfilePath) === 'file') {
-		configfileOptions = require(configfilePath);
+		configfileOptions = require(configfilePath); // eslint-disable-line import/no-dynamic-require
 	}
 
 	const config = Object.assign(defaultOptions, configfileOptions, options);
