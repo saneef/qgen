@@ -14,8 +14,8 @@ const constants = require('./constants');
 
 const DEFAULT_DESTINATION = './';
 
-const renderFileWithHandlebars = (src, context) => {
-	// encoding is pass as 'utf8' to get the return value as string
+const renderTemplate = (src, context) => {
+	// encoding is set as 'utf8' to get the return value as string
 	const fileContents = fs.readFileSync(src, 'utf8');
 
 	const hbsTemplate = handlebars.compile(fileContents);
@@ -31,12 +31,12 @@ const writeToFile = (filePath, content) => {
 	return Promise.resolve();
 };
 
-const processTemplate = (src, dest, config) => {
-	const renderedContent = renderFileWithHandlebars(src, config);
+const renderToFile = (src, dest, config) => {
+	const renderedContent = renderTemplate(src, config);
 	return writeToFile(dest, renderedContent);
 };
 
-const generateFilePath = (filePath, options) => {
+const generateFilePathFromConfig = (filePath, options) => {
 	let renderedFilePath = filePath;
 	const filenameRegex = /__([^_\W]+)__/g;
 
@@ -47,7 +47,7 @@ const generateFilePath = (filePath, options) => {
 	return renderedFilePath;
 };
 
-const generateTemplateConfig = (config, templateName) => {
+const getTemplateConfig = (config, templateName) => {
 	let templateConfig = config;
 
 	// Process the additional config specific
@@ -103,7 +103,7 @@ module.exports = (templateName, destination, options) => {
 	const file = isFileOrDir(path.join(config.cwd, templateRelPath));
 
 	// overwrite current config with template specific config
-	const templateConfig = generateTemplateConfig(config, templateName);
+	const templateConfig = getTemplateConfig(config, templateName);
 
 	// override dest with dest from CLI
 	if (destination) {
@@ -120,7 +120,7 @@ module.exports = (templateName, destination, options) => {
 				const filesCount = files.length;
 
 				const fileObjects = files.map(filePath => {
-					const destFilePath = generateFilePath(filePath, config);
+					const destFilePath = generateFilePathFromConfig(filePath, config);
 
 					return {
 						src: path.join(templateConfig.cwd, templateConfig.directory, templateName, filePath),
@@ -135,7 +135,7 @@ module.exports = (templateName, destination, options) => {
 					let _r = Promise.resolve();
 					if (i < filesCount) {
 						if (overwriteAllFiles) {
-							_r = processTemplate(fileObjects[i].src, fileObjects[i].dest, fileObjects[i].config).then(() => {
+							_r = renderToFile(fileObjects[i].src, fileObjects[i].dest, fileObjects[i].config).then(() => {
 								return recursivelyProcessFile(i + 1);
 							});
 						} else {
@@ -147,7 +147,7 @@ module.exports = (templateName, destination, options) => {
 								if (overwrite === constants.WRITE ||
 										overwrite === constants.OVERWRITE ||
 										overwriteAllFiles) {
-									return processTemplate(fileObjects[i].src, fileObjects[i].dest, fileObjects[i].config).then(() => {
+									return renderToFile(fileObjects[i].src, fileObjects[i].dest, fileObjects[i].config).then(() => {
 										return recursivelyProcessFile(i + 1);
 									});
 								}
@@ -168,7 +168,7 @@ module.exports = (templateName, destination, options) => {
 			if (overwrite === constants.WRITE ||
 					overwrite === constants.OVERWRITE ||
 					overwrite === constants.OVERWRITE_ALL) {
-				_r = processTemplate(srcAbsolutePath, destAbsolutePath, templateConfig);
+				_r = renderToFile(srcAbsolutePath, destAbsolutePath, templateConfig);
 			} else {
 				_r = Promise.reject(new QGenError(constants.ABORT));
 			}
