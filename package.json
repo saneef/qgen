@@ -36,7 +36,7 @@
   },
   "devDependencies": {
     "assert-dir-equal": "^1.0.1",
-    "ava": "^0.17.0",
+    "ava": "^0.18.1",
     "cpy": "^5.0.0",
     "del": "^2.2.1",
     "execa": "^0.6.0",
