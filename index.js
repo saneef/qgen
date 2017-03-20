@@ -15,7 +15,7 @@ const constants = require('./constants');
 const DEFAULT_DESTINATION = './';
 
 const renderTemplate = (src, context) => {
-	// encoding is set as 'utf8' to get the return value as string
+	// Encoding is set as 'utf8' to get the return value as string
 	const fileContents = fs.readFileSync(src, 'utf8');
 
 	const hbsTemplate = handlebars.compile(fileContents);
@@ -102,10 +102,10 @@ module.exports = (templateName, destination, options) => {
 
 	const file = isFileOrDir(path.join(config.cwd, templateRelPath));
 
-	// overwrite current config with template specific config
+	// Overwrite current config with template specific config
 	const templateConfig = getTemplateConfig(config, templateName);
 
-	// override dest with dest from CLI
+	// Override dest with dest from CLI
 	if (destination) {
 		templateConfig.dest = destination;
 	}

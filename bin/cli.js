@@ -22,7 +22,6 @@ const cli = meow(`
 		$ qgen post ./pages --page-title "Hello World" ${chalk.dim('# generates the post template in inside ./pages with data field pageTitle="Hello World" to the template rendering engine')}
 `);
 
-// cli.flags
 if (cli.input.length === 0) {
 	cli.showHelp();
 } else {
