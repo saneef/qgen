@@ -1,5 +1,5 @@
 module.exports = {
-	// file write
+	// File write modes
 	WRITE: 'WRITE',
 	OVERWRITE: 'OVERWRITE',
 	OVERWRITE_ALL: 'OVERWRITE_ALL',
