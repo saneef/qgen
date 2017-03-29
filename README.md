@@ -11,6 +11,8 @@ Some scenarios where q·gen can come handy for you:
 
 ![](/media/qgen-example-usge.gif)
 
+q·gen is inspired by envato-tuts+’s [Structurer.app](https://code.tutsplus.com/articles/free-mac-utility-app-structurer--net-17153).
+
 ## Install
 
 	$ npm install -g qgen
