@@ -1,6 +1,6 @@
 ![qgen logo](https://cdn.rawgit.com/alarisprime/qgen/master/media/qgen-logo.svg)
 
-[![Build Status](https://travis-ci.org/alarisprime/qgen.svg?branch=master)](https://travis-ci.org/alarisprime/qgen)
+[![Build Status](https://travis-ci.org/alarisprime/qgen.svg?branch=master)](https://travis-ci.org/alarisprime/qgen) [![Greenkeeper badge](https://badges.greenkeeper.io/alarisprime/qgen.svg)](https://greenkeeper.io/)
 
 q·gen generates files and folders from templates. It can generate folder structre as well as file contents.
 
@@ -14,8 +14,6 @@ Some scenarios where q·gen can come handy for you:
 q·gen is inspired by envato-tuts+’s [Structurer.app](https://code.tutsplus.com/articles/free-mac-utility-app-structurer--net-17153).
 
 ## Install
-
-[![Greenkeeper badge](https://badges.greenkeeper.io/alarisprime/qgen.svg)](https://greenkeeper.io/)
 
 	$ npm install -g qgen
 
