@@ -15,6 +15,8 @@ q·gen is inspired by envato-tuts+’s [Structurer.app](https://code.tutsplus.co
 
 ## Install
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/alarisprime/qgen.svg)](https://greenkeeper.io/)
+
 	$ npm install -g qgen
 
 ## Usage
