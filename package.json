@@ -1,6 +1,6 @@
 {
   "name": "qgen",
-  "version": "1.1.4",
+  "version": "0.0.0-development",
   "description": "Generate files from templates",
   "bin": {
     "qgen": "./bin/cli.js"
@@ -9,7 +9,8 @@
     "watch:test": "npm run unit-test -- -w npm run unit-test -- -w --source './test/fixtures/*/src/**/*' './test/fixutres/*/expected/**/*' './test/*.js'",
     "unit-test": "ava",
     "lint": "xo",
-    "test": "npm run lint && npm run unit-test"
+    "test": "npm run lint && npm run unit-test",
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
   "repository": "alarisprime/qgen",
   "keywords": [
@@ -40,7 +41,8 @@
     "cpy": "^5.0.0",
     "del": "^3.0.0",
     "execa": "^0.7.0",
-    "xo": "^0.19.0"
+    "xo": "^0.19.0",
+    "semantic-release": "^6.3.6"
   },
   "xo": {
     "esnext": true
