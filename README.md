@@ -131,6 +131,9 @@ You can keep keep your configuration file, `gqen` with settings like template di
 }
 ```
 
+## Contributing
+
+This package is uses [semantic-release](https://github.com/semantic-release/semantic-release) for automatically releasing. For it to work, make sure the commit messages are in [this format](https://github.com/semantic-release/semantic-release#default-commit-message-format).
 
 ## Tips & Tricks
 
@@ -142,10 +145,9 @@ Make use of the system `date` command.
 $ qgen blog.md --filename=`date "+%Y-%m-%d"`
 ```
 
-## Feature to be implemented
+## Features to be implemented
 
-- [x] variable in filenames
-- [x] config file, to keep default values and paths
+- [ ] List the available templates. # 15
 - [ ] Use date and other dynamic data for variables. For now, read [Tips & Tricks](#tips--tricks)
 - [ ] ability to add plugin [helpers](http://handlebarsjs.com/expressions.html#helpers)
 
