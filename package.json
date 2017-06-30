@@ -30,10 +30,12 @@
     "globby": "^6.0.0",
     "handlebars": "^4.0.5",
     "inquirer": "^3.0.0",
-    "meow": "^3.7.0",
+    "minimist": "^1.2.0",
     "mkdirp": "^0.5.1",
     "nested-error-stacks": "^2.0.0",
-    "pinkie-promise": "^2.0.1"
+    "pinkie-promise": "^2.0.1",
+    "redent": "^2.0.0",
+    "trim-newlines": "^2.0.0"
   },
   "devDependencies": {
     "assert-dir-equal": "^1.0.1",
@@ -41,8 +43,8 @@
     "cpy": "^5.0.0",
     "del": "^3.0.0",
     "execa": "^0.7.0",
-    "xo": "^0.19.0",
-    "semantic-release": "^6.3.6"
+    "semantic-release": "^6.3.6",
+    "xo": "^0.19.0"
   },
   "xo": {
     "esnext": true

@@ -1,31 +1,40 @@
 #!/usr/bin/env node
 'use strict';
 
-const meow = require('meow');
 const chalk = require('chalk');
+const minimist = require('minimist');
+const redent = require('redent');
+const trimNewlines = require('trim-newlines');
 
 const qgen = require('../');
-
 const constants = require('../constants');
 
-const cli = meow(`
-	${chalk.bold('Usage')}
-		$ qgen <template name> [dest] [arguments] [options]
+const showHelp = () => {
+	const helpText = `
+		${chalk.bold('Usage')}
+			$ qgen <template name> [dest] [arguments] [options]
 
-	${chalk.bold('Options')}
-	--directory=<dir>	Templates directory # Default: ./gqen-templates
-	--config=<path>	Path to the JSON config file # Default: ./qgen.json
+		${chalk.bold('Options')}
+		--directory=<dir>	Templates directory # Default: ./gqen-templates
+		--config=<path>	Path to the JSON config file # Default: ./qgen.json
 
-	${chalk.bold('Examples')}
-		$ qgen post ${chalk.dim('# generates the post template in the current folder')}
-		$ qgen post ./pages ${chalk.dim('# generates the post template inside ./pages')}
-		$ qgen post ./pages --page-title "Hello World" ${chalk.dim('# generates the post template in inside ./pages with data field pageTitle="Hello World" to the template rendering engine')}
-`);
+		${chalk.bold('Examples')}
+			$ qgen post ${chalk.dim('# generates the post template in the current folder')}
+			$ qgen post ./pages ${chalk.dim('# generates the post template inside ./pages')}
+			$ qgen post ./pages --page-title "Hello World" ${chalk.dim('# generates the post template in inside ./pages with data field pageTitle="Hello World" to the template rendering engine')}
+	`;
 
-if (cli.input.length === 0) {
-	cli.showHelp();
+	const help = redent(trimNewlines(helpText).replace(/\t+\n*$/, ''), 2);
+
+	console.log(help);
+};
+
+const argv = minimist(process.argv.slice(2));
+
+if (argv.help || argv._.length === 0) {
+	showHelp();
 } else {
-	qgen(cli.input[0], cli.input[1], cli.flags)
+	qgen(argv._[0], argv._[1], argv)
 		.catch(err => {
 			if (err.message === constants.ABORT) {
 				process.exit(0);
