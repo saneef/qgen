@@ -70,16 +70,21 @@ function qgen(options) {
 		return templateConfig;
 	};
 
-	// This recursive is to make the inquirer prompt work
-	// in sequential. May be there is a better way to do this.
+	// This recursive function is to make the inquirer prompt work
+	// in sequential. May be, there is a better way to do this.
 	const processFilesRecursively = (i, fileObjects, overwriteAll) => {
 		let _r = Promise.resolve();
+
 		if (i < fileObjects.length) {
-			if (overwriteAll) {
+			const processFile = () => {
 				if (templateRenderer(fileObjects[i].src, fileObjects[i].config).save(fileObjects[i].dest)) {
 					return processFilesRecursively(i + 1, fileObjects, overwriteAll);
 				}
-				_r = Promise.reject(new QGenError(`Error rendering template.`));
+				return Promise.reject(new QGenError(`Error rendering template.`));
+			};
+
+			if (overwriteAll) {
+				_r = processFile();
 			} else {
 				_r = promptIfFileExists(fileObjects[i].dest).then(overwrite => {
 					if (overwrite === constants.OVERWRITE_ALL) {
@@ -89,10 +94,7 @@ function qgen(options) {
 					if (overwrite === constants.WRITE ||
 							overwrite === constants.OVERWRITE ||
 							overwriteAll) {
-						if (templateRenderer(fileObjects[i].src, fileObjects[i].config).save(fileObjects[i].dest)) {
-							return processFilesRecursively(i + 1, fileObjects, overwriteAll);
-						}
-						return Promise.reject(new QGenError(`Error rendering template.`));
+						return processFile();
 					}
 				});
 			}
@@ -118,8 +120,8 @@ function qgen(options) {
 		}
 
 		let returnVal;
-		const templateRelPath = path.join(config.directory, templateName);
 
+		const templateRelPath = path.join(config.directory, templateName);
 		const file = isFileOrDir(path.join(config.cwd, templateRelPath));
 
 		// Overwrite current config with template specific config
