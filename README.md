@@ -2,12 +2,12 @@
 
 [![Build Status](https://travis-ci.org/alarisprime/qgen.svg?branch=master)](https://travis-ci.org/alarisprime/qgen) [![Greenkeeper badge](https://badges.greenkeeper.io/alarisprime/qgen.svg)](https://greenkeeper.io/)
 
-q·gen generates files and folders from templates. It can generate folder structre as well as file contents.
+q·gen generates files and folders from templates. It can generate folder structure as well as file contents.
 
 Some scenarios where q·gen can come handy for you:
 
-- Generate the file for you next Jekyll blog post.
-- Generate files for a new React component in your current project
+- Generate the file for your next Jekyll blog post.
+- Generate files for the new React component in your current project.
 
 ![](/media/qgen-example-usge.gif)
 
@@ -35,19 +35,20 @@ Examples
 
 In your project folder (where packages.json is present), keep your templates files inside `qgen-templates`.
 
-## q·gen Templates
+## Templates
 
-q·gen uses [handlebars](http://handlebarsjs.com) to render the template files. So use handlebars syntax to write you generator files.
+q·gen uses [Handlebars](http://handlebarsjs.com) to render the template files. So use handlebars syntax to write you generator files.
 
-The data arguments passed to CLI will be converted in camel case and passed to the template rendering enging. Eg `--page-title` can be access in template using `pageTitle`.
+The data arguments passed to CLI will be converted in camel case and passed to the template rendering engine. Eg `--page-title` can be accessed in the template using `pageTitle`.
 
 You can also use the data values to generate filename. Eg. with data `--page-title` can be used to render a filename `__pageTitle__.md`. Eg. `--page-title=today` can be used to render `__pageTitle__.md → today.md`. Data variables can be used only for files kept inside a folder. Read more on it under [Template with multiple files](#template-with-multiple-files).
 
 ### Example
 
-#### Template of single file
+#### Template with a single file
 
-Template file `./qgen-templates/post.md`, where `post.md` will be the name of the template.
+File `./qgen-templates/post.md`
+
 ```markdown
 ---
 title: {{title}}
@@ -71,9 +72,10 @@ slug: hello-world
 
 #### Template with multiple files
 
-Template folder `./qgen-templates/my-component`, where `my-component` will be the name of the template.
+Keep all the files inside `./qgen-templates/my-component`, where `my-component` will be the name of the template.
 
-Template file `./qgen-templates/__title__.jsx`
+File `./qgen-templates/__title__.jsx`
+
 ```jsx
 import React, { PropTypes } from 'react';
 
@@ -83,7 +85,8 @@ export default {{title}};
 
 ```
 
-Template file `./qgen-templates/__title__.css`
+File `./qgen-templates/__title__.css`
+
 ```css
 .{{className}} {
 	clear: both;
@@ -115,7 +118,7 @@ Generated file `./Dummy/Dummy.css`
 
 ## ‘qgen.json’, The configfile
 
-You can keep keep your configuration file, `gqen` with settings like template directory, default destination,…
+You can use `qgen.json` to set template directory, default destination, default argument values, etc.
 
 ```javascript
 {
@@ -139,7 +142,7 @@ This package is uses [semantic-release](https://github.com/semantic-release/sema
 
 ### Want to set a variable to today’s date?
 
-Make use of the system `date` command.
+Make use of the system `date` shell command.
 
 ```bash
 $ qgen blog.md --filename=`date "+%Y-%m-%d"`
@@ -149,7 +152,6 @@ $ qgen blog.md --filename=`date "+%Y-%m-%d"`
 
 - [ ] Use date and other dynamic data for variables. For now, read [Tips & Tricks](#tips--tricks)
 - [ ] ability to add plugin [helpers](http://handlebarsjs.com/expressions.html#helpers)
-- [x] List the available templates. See [#15](https://github.com/alarisprime/qgen/issues/15)
 
 ## License
 
