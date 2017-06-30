@@ -20,17 +20,29 @@ const readyBuildFromSrc = name => {
 	return copy([src], dest, {parents: true, cwd: testBase, nodir: true});
 };
 
-test('should executes,', t => {
-	return t.notThrows(execa(binPath, [], {cwd: fixturesBasePath}));
+test('should throws error when template directory is missing,', t => {
+	return t.throws(execa(binPath, [], {cwd: fixturesBasePath}));
+});
+
+test('should throw error when non-existent template is specified', t => {
+	return t.throws(execa(binPath, ['non_existent_template'], {cwd: fixturesBasePath}));
 });
 
 test('should show help message when executed without any arguments,', async t => {
-	const result = await execa(binPath, [], {cwd: fixturesBasePath});
+	await readyBuildFromSrc('single-file');
+	const result = await execa(binPath, ['--help'], {
+		cwd: path.join(fixturesBasePath, './single-file/build')
+	});
 	t.regex(result.stdout, /Usage/g);
 });
 
-test('should throw error', t => {
-	return t.throws(execa(binPath, ['non_existent_template'], {cwd: fixturesBasePath}));
+test('should list available templates', async t => {
+	await readyBuildFromSrc('single-file');
+	const result = await execa(binPath, ['--help'], {
+		cwd: path.join(fixturesBasePath, './single-file/build')
+	});
+	t.regex(result.stdout, /Available Templates/g);
+	t.regex(result.stdout, /blog\.md/g);
 });
 
 test('should generate from a single file', async () => {

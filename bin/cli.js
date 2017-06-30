@@ -29,12 +29,31 @@ const showHelp = () => {
 	console.log(help);
 };
 
+const listTemplates = options => {
+	qgen(options)
+		.templates()
+		.then(templates => {
+			if (templates.length > 0) {
+				console.log(redent(`	${chalk.bold('Available Templates')}`, 2));
+				templates.forEach(template => {
+					console.log(redent(`${template}`, 4));
+				});
+			}
+		})
+		.catch(err => {
+			console.error(err.message);
+			process.exit(2);
+		});
+};
+
 const argv = minimist(process.argv.slice(2));
 
 if (argv.help || argv._.length === 0) {
 	showHelp();
+	listTemplates(argv);
 } else {
-	qgen(argv._[0], argv._[1], argv)
+	qgen(argv)
+		.render(argv._[0], argv._[1])
 		.catch(err => {
 			if (err.message === constants.ABORT) {
 				process.exit(0);
