@@ -111,54 +111,54 @@ module.exports = (templateName, destination, options) => {
 	}
 
 	if (file === 'directory') {
-		returnVal = globby(['**/*'], {
+		const files = globby.sync(['**/*'], {
 			cwd: path.join(config.cwd, templateRelPath),
 			nodir: true
-		})
-			.then(files => {
-				let overwriteAllFiles = false;
-				const filesCount = files.length;
+		});
 
-				const fileObjects = files.map(filePath => {
-					const destFilePath = generateFilePathFromConfig(filePath, config);
+		let overwriteAllFiles = false;
+		const filesCount = files.length;
 
-					return {
-						src: path.join(templateConfig.cwd, templateConfig.directory, templateName, filePath),
-						dest: path.join(templateConfig.cwd, templateConfig.dest, destFilePath),
-						config: templateConfig
-					};
-				});
+		const fileObjects = files.map(filePath => {
+			const destFilePath = generateFilePathFromConfig(filePath, config);
 
-				// This recursive is to make the inquirer prompt work
-				// in sequential. May be there is a better way to do this.
-				function recursivelyProcessFile(i) {
-					let _r = Promise.resolve();
-					if (i < filesCount) {
-						if (overwriteAllFiles) {
-							_r = renderToFile(fileObjects[i].src, fileObjects[i].dest, fileObjects[i].config).then(() => {
+			return {
+				src: path.join(templateConfig.cwd, templateConfig.directory, templateName, filePath),
+				dest: path.join(templateConfig.cwd, templateConfig.dest, destFilePath),
+				config: templateConfig
+			};
+		});
+
+		// This recursive is to make the inquirer prompt work
+		// in sequential. May be there is a better way to do this.
+		function recursivelyProcessFile(i) {
+			let _r = Promise.resolve();
+			if (i < filesCount) {
+				if (overwriteAllFiles) {
+					_r = renderToFile(fileObjects[i].src, fileObjects[i].dest, fileObjects[i].config).then(() => {
+						return recursivelyProcessFile(i + 1);
+					});
+				} else {
+					_r = promptIfFileExists(fileObjects[i].dest).then(overwrite => {
+						if (overwrite === constants.OVERWRITE_ALL) {
+							overwriteAllFiles = true;
+						}
+
+						if (overwrite === constants.WRITE ||
+								overwrite === constants.OVERWRITE ||
+								overwriteAllFiles) {
+							return renderToFile(fileObjects[i].src, fileObjects[i].dest, fileObjects[i].config).then(() => {
 								return recursivelyProcessFile(i + 1);
 							});
-						} else {
-							_r = promptIfFileExists(fileObjects[i].dest).then(overwrite => {
-								if (overwrite === constants.OVERWRITE_ALL) {
-									overwriteAllFiles = true;
-								}
-
-								if (overwrite === constants.WRITE ||
-										overwrite === constants.OVERWRITE ||
-										overwriteAllFiles) {
-									return renderToFile(fileObjects[i].src, fileObjects[i].dest, fileObjects[i].config).then(() => {
-										return recursivelyProcessFile(i + 1);
-									});
-								}
-							});
 						}
-					}
-					return _r;
+					});
 				}
+			}
+			return _r;
+		}
 
-				return recursivelyProcessFile(0);
-			});
+		return recursivelyProcessFile(0);
+
 	} else if (file === 'file') {
 		const srcAbsolutePath = path.join(templateConfig.cwd, templateRelPath);
 		const destAbsolutePath = path.join(templateConfig.cwd, templateConfig.dest, templateName);
