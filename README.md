@@ -147,9 +147,9 @@ $ qgen blog.md --filename=`date "+%Y-%m-%d"`
 
 ## Features to be implemented
 
-- [ ] List the available templates. See [#15](https://github.com/alarisprime/qgen/issues/15)
 - [ ] Use date and other dynamic data for variables. For now, read [Tips & Tricks](#tips--tricks)
 - [ ] ability to add plugin [helpers](http://handlebarsjs.com/expressions.html#helpers)
+- [x] List the available templates. See [#15](https://github.com/alarisprime/qgen/issues/15)
 
 ## License
 
