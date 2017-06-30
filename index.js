@@ -1,20 +1,18 @@
 'use strict';
-const fs = require('fs');
 const path = require('path');
 
-const handlebars = require('handlebars');
-const mkdirp = require('mkdirp');
 const globby = require('globby');
 const Promise = require('pinkie-promise');
 
 const QGenError = require('./lib/qgen-error');
+const templateRenderer = require('./lib/template-renderer');
 const isFileOrDir = require('./lib/file-helpers').isFileOrDir;
 const promptIfFileExists = require('./lib/prompt-helpers').promptIfFileExists;
 const constants = require('./constants');
 
 const DEFAULT_DESTINATION = './';
 
-const Qgen = options => {
+function qgen(options) {
 	const defaultOptions = {
 		dest: DEFAULT_DESTINATION,
 		cwd: process.cwd(),
@@ -22,11 +20,12 @@ const Qgen = options => {
 		config: './qgen.json'
 	};
 
-	let configfileOptions = {};
 	let configfilePath = path.join(defaultOptions.cwd, defaultOptions.config);
 	if (options.config) {
 		configfilePath = options.config;
 	}
+
+	let configfileOptions = {};
 	// Read the configfile if exists
 	if (isFileOrDir(configfilePath) === 'file') {
 		configfileOptions = require(configfilePath); // eslint-disable-line import/no-dynamic-require
@@ -34,29 +33,7 @@ const Qgen = options => {
 
 	const config = Object.assign(defaultOptions, configfileOptions, options);
 
-	const renderTemplate = (src, context) => {
-		// Encoding is set as 'utf8' to get the return value as string
-		const fileContents = fs.readFileSync(src, 'utf8');
-
-		const hbsTemplate = handlebars.compile(fileContents);
-
-		return hbsTemplate(context);
-	};
-
-	const writeToFile = (filePath, content) => {
-		if (isFileOrDir(path.dirname(filePath)) !== 'directory') {
-			mkdirp.sync(path.dirname(filePath));
-		}
-		fs.writeFileSync(filePath, content);
-		return Promise.resolve();
-	};
-
-	const renderToFile = (src, dest, config) => {
-		const renderedContent = renderTemplate(src, config);
-		return writeToFile(dest, renderedContent);
-	};
-
-	const generateFilePathFromConfig = (filePath, options) => {
+	const generateDestFilePath = (filePath, options) => {
 		let renderedFilePath = filePath;
 		const filenameRegex = /__([^_\W]+)__/g;
 
@@ -67,7 +44,7 @@ const Qgen = options => {
 		return renderedFilePath;
 	};
 
-	const getTemplateConfig = (config, templateName) => {
+	const generateTemplateConfig = (config, templateName) => {
 		let templateConfig = config;
 
 		// Process the additional config specific
@@ -99,9 +76,10 @@ const Qgen = options => {
 		let _r = Promise.resolve();
 		if (i < fileObjects.length) {
 			if (overwriteAll) {
-				_r = renderToFile(fileObjects[i].src, fileObjects[i].dest, fileObjects[i].config).then(() => {
+				if (templateRenderer(fileObjects[i].src, fileObjects[i].config).save(fileObjects[i].dest)) {
 					return processFilesRecursively(i + 1, fileObjects, overwriteAll);
-				});
+				}
+				_r = Promise.reject(new QGenError(`Error rendering template.`));
 			} else {
 				_r = promptIfFileExists(fileObjects[i].dest).then(overwrite => {
 					if (overwrite === constants.OVERWRITE_ALL) {
@@ -111,9 +89,10 @@ const Qgen = options => {
 					if (overwrite === constants.WRITE ||
 							overwrite === constants.OVERWRITE ||
 							overwriteAll) {
-						return renderToFile(fileObjects[i].src, fileObjects[i].dest, fileObjects[i].config).then(() => {
+						if (templateRenderer(fileObjects[i].src, fileObjects[i].config).save(fileObjects[i].dest)) {
 							return processFilesRecursively(i + 1, fileObjects, overwriteAll);
-						});
+						}
+						return Promise.reject(new QGenError(`Error rendering template.`));
 					}
 				});
 			}
@@ -144,7 +123,7 @@ const Qgen = options => {
 		const file = isFileOrDir(path.join(config.cwd, templateRelPath));
 
 		// Overwrite current config with template specific config
-		const templateConfig = getTemplateConfig(config, templateName);
+		const templateConfig = generateTemplateConfig(config, templateName);
 
 		// Override dest with dest from CLI
 		if (destination) {
@@ -158,7 +137,7 @@ const Qgen = options => {
 			});
 
 			const fileObjects = files.map(filePath => {
-				const destFilePath = generateFilePathFromConfig(filePath, config);
+				const destFilePath = generateDestFilePath(filePath, config);
 
 				return {
 					src: path.join(templateConfig.cwd, templateConfig.directory, templateName, filePath),
@@ -177,7 +156,8 @@ const Qgen = options => {
 				if (overwrite === constants.WRITE ||
 						overwrite === constants.OVERWRITE ||
 						overwrite === constants.OVERWRITE_ALL) {
-					_r = renderToFile(srcAbsolutePath, destAbsolutePath, templateConfig);
+					templateRenderer(srcAbsolutePath, templateConfig).save(destAbsolutePath);
+					_r = Promise.resolve();
 				} else {
 					_r = Promise.reject(new QGenError(constants.ABORT));
 				}
@@ -194,6 +174,6 @@ const Qgen = options => {
 		templates,
 		render
 	});
-};
+}
 
-module.exports = Qgen;
+module.exports = qgen;
