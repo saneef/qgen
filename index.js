@@ -73,6 +73,34 @@ const getTemplateConfig = (config, templateName) => {
 	return templateConfig;
 };
 
+// This recursive is to make the inquirer prompt work
+// in sequential. May be there is a better way to do this.
+function processFilesRecursively(i, fileObjects, overwriteAll) {
+	let _r = Promise.resolve();
+	if (i < fileObjects.length) {
+		if (overwriteAll) {
+			_r = renderToFile(fileObjects[i].src, fileObjects[i].dest, fileObjects[i].config).then(() => {
+				return processFilesRecursively(i + 1, fileObjects, overwriteAll);
+			});
+		} else {
+			_r = promptIfFileExists(fileObjects[i].dest).then(overwrite => {
+				if (overwrite === constants.OVERWRITE_ALL) {
+					overwriteAll = true;
+				}
+
+				if (overwrite === constants.WRITE ||
+						overwrite === constants.OVERWRITE ||
+						overwriteAll) {
+					return renderToFile(fileObjects[i].src, fileObjects[i].dest, fileObjects[i].config).then(() => {
+						return processFilesRecursively(i + 1, fileObjects, overwriteAll);
+					});
+				}
+			});
+		}
+	}
+	return _r;
+}
+
 module.exports = (templateName, destination, options) => {
 	const defaultOptions = {
 		dest: DEFAULT_DESTINATION,
@@ -116,9 +144,6 @@ module.exports = (templateName, destination, options) => {
 			nodir: true
 		});
 
-		let overwriteAllFiles = false;
-		const filesCount = files.length;
-
 		const fileObjects = files.map(filePath => {
 			const destFilePath = generateFilePathFromConfig(filePath, config);
 
@@ -129,36 +154,7 @@ module.exports = (templateName, destination, options) => {
 			};
 		});
 
-		// This recursive is to make the inquirer prompt work
-		// in sequential. May be there is a better way to do this.
-		function recursivelyProcessFile(i) {
-			let _r = Promise.resolve();
-			if (i < filesCount) {
-				if (overwriteAllFiles) {
-					_r = renderToFile(fileObjects[i].src, fileObjects[i].dest, fileObjects[i].config).then(() => {
-						return recursivelyProcessFile(i + 1);
-					});
-				} else {
-					_r = promptIfFileExists(fileObjects[i].dest).then(overwrite => {
-						if (overwrite === constants.OVERWRITE_ALL) {
-							overwriteAllFiles = true;
-						}
-
-						if (overwrite === constants.WRITE ||
-								overwrite === constants.OVERWRITE ||
-								overwriteAllFiles) {
-							return renderToFile(fileObjects[i].src, fileObjects[i].dest, fileObjects[i].config).then(() => {
-								return recursivelyProcessFile(i + 1);
-							});
-						}
-					});
-				}
-			}
-			return _r;
-		}
-
-		return recursivelyProcessFile(0);
-
+		returnVal = processFilesRecursively(0, fileObjects, false);
 	} else if (file === 'file') {
 		const srcAbsolutePath = path.join(templateConfig.cwd, templateRelPath);
 		const destAbsolutePath = path.join(templateConfig.cwd, templateConfig.dest, templateName);
@@ -174,8 +170,6 @@ module.exports = (templateName, destination, options) => {
 			}
 			return _r;
 		});
-
-		return returnVal;
 	} else {
 		returnVal = Promise.reject(new QGenError(`Template '${templateRelPath}' not found.`, file.message, file));
 	}
