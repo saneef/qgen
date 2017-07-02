@@ -40,12 +40,17 @@ const showHelp = () => {
  * @return {undefined}
  */
 const listTemplates = options => {
-	const templates = qgen(options).templates();
-	if (Array.isArray(templates) && templates.length > 0) {
-		console.log(redent(`	${chalk.bold('Available Templates')}`, 2));
-		templates.forEach(template => {
-			console.log(redent(`${template}`, 4));
-		});
+	try {
+		const templates = qgen(options).templates();
+		if (Array.isArray(templates) && templates.length > 0) {
+			console.log(redent(`	${chalk.bold('Available Templates')}`, 2));
+			templates.forEach(template => {
+				console.log(redent(`${template}`, 4));
+			});
+		}
+	} catch (err) {
+		console.error(err.message);
+		process.exit(1);
 	}
 };
 
