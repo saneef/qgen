@@ -5,7 +5,6 @@
 const path = require('path');
 
 const globby = require('globby');
-const Promise = require('pinkie-promise');
 const QGenError = require('./lib/qgen-error');
 
 const templateRenderer = require('./lib/template-renderer');
@@ -41,20 +40,18 @@ function qgen(options) {
 	// This recursive function is to make the inquirer prompt work
 	// in sequential. May be, there is a better way to do this.
 	const processFilesRecursively = (i, fileObjects, overwriteAll) => {
-		let _r = Promise.resolve();
-
 		if (i < fileObjects.length) {
 			const processFile = () => {
 				if (templateRenderer(fileObjects[i].src, fileObjects[i].config).save(fileObjects[i].dest)) {
 					return processFilesRecursively(i + 1, fileObjects, overwriteAll);
 				}
-				return Promise.reject(new QGenError(`Error rendering template.`));
+				throw new QGenError(`Error rendering template.`);
 			};
 
 			if (overwriteAll) {
-				_r = processFile();
+				processFile();
 			} else {
-				_r = promptIfFileExists(fileObjects[i].dest).then(overwrite => {
+				promptIfFileExists(fileObjects[i].dest).then(overwrite => {
 					if (overwrite === constants.OVERWRITE_ALL) {
 						overwriteAll = true;
 					}
@@ -67,20 +64,17 @@ function qgen(options) {
 				});
 			}
 		}
-		return _r;
 	};
 
 	/**
-	 * Lists the available templates
+	 * Lists the available template names
 	 *
-	 * @return {Promise} Resolves to Array of templates if successful, else rejects with QGenError
+	 * @return {Array} available template names
 	 */
 	const templates = () => {
-		const templates = globby.sync(['*'], {
+		return globby.sync(['*'], {
 			cwd: path.join(config.cwd, config.directory)
 		});
-
-		return Promise.resolve(templates);
 	};
 
 	/**
@@ -88,18 +82,13 @@ function qgen(options) {
 	 *
 	 * @param  {String} templateName
 	 * @param  {String} destination
-	 * @return {Promise} Resolves to undefined if success, else reject with QgenError
 	 */
 	const render = (templateName, destination) => {
-		let returnVal;
-
 		const templateRelPath = path.join(config.directory, templateName);
 		const file = isFileOrDir(path.join(config.cwd, templateRelPath));
-
-		// Overwrite current config with template specific config
 		const templateConfig = createTemplateConfig(config, templateName, DEFAULT_DESTINATION);
 
-		// Override dest with dest from CLI
+		// Override config dest with passed destination
 		if (destination) {
 			templateConfig.dest = destination;
 		}
@@ -120,28 +109,22 @@ function qgen(options) {
 				};
 			});
 
-			returnVal = processFilesRecursively(0, fileObjects, false);
+			processFilesRecursively(0, fileObjects, false);
 		} else if (file === 'file') {
 			const srcAbsolutePath = path.join(templateConfig.cwd, templateRelPath);
 			const destAbsolutePath = path.join(templateConfig.cwd, templateConfig.dest, templateName);
 
-			returnVal = promptIfFileExists(destAbsolutePath).then(overwrite => {
-				let _r;
-				if (overwrite === constants.WRITE ||
-						overwrite === constants.OVERWRITE ||
-						overwrite === constants.OVERWRITE_ALL) {
-					templateRenderer(srcAbsolutePath, templateConfig).save(destAbsolutePath);
-					_r = Promise.resolve();
-				} else {
-					_r = Promise.reject(new QGenError(constants.ABORT));
-				}
-				return _r;
-			});
+			promptIfFileExists(destAbsolutePath)
+				.then(overwrite => {
+					if (overwrite === constants.WRITE ||
+							overwrite === constants.OVERWRITE ||
+							overwrite === constants.OVERWRITE_ALL) {
+						templateRenderer(srcAbsolutePath, templateConfig).save(destAbsolutePath);
+					}
+				});
 		} else {
-			returnVal = Promise.reject(new QGenError(`Template '${templateRelPath}' not found.`, file.message, file));
+			throw new QGenError(`Template '${templateRelPath}' not found.`, file.message, file);
 		}
-
-		return returnVal;
 	};
 
 	if (isFileOrDir(config.directory) !== 'directory') {
