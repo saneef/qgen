@@ -37,6 +37,11 @@ function qgen(options) {
 	const configfileOptions = loadConfig(configfilePath);
 	const config = Object.assign(defaultOptions, configfileOptions, options);
 
+	/** Throw error if qgen template directory is missing */
+	if (isFileOrDir(config.directory) !== 'directory') {
+		throw new QGenError(`qgen templates directory '${config.directory}' not found.`);
+	}
+
 	/**
 	 * Lists the available template names
 	 *
@@ -55,8 +60,8 @@ function qgen(options) {
 	 * @param  {String} destination
 	 */
 	const render = async (template, destination) => {
-		const templateRelPath = path.join(config.directory, template);
-		const file = isFileOrDir(path.join(config.cwd, templateRelPath));
+		const templatePath = path.join(config.directory, template);
+		const templateType = isFileOrDir(path.join(config.cwd, templatePath));
 		const templateConfig = createTemplateConfig(config, template, DEFAULT_DESTINATION);
 
 		// Override config dest with passed destination
@@ -64,51 +69,48 @@ function qgen(options) {
 			templateConfig.dest = destination;
 		}
 
-		if (file === 'directory') {
+		let fileObjects;
+
+		if (templateType === 'directory') {
 			const files = globby.sync(['**/*'], {
-				cwd: path.join(config.cwd, templateRelPath),
+				cwd: path.join(config.cwd, templatePath),
 				nodir: true
 			});
 
-			let abort = false;
-			let overwriteAll = false;
-			for (let i = 0; i < files.length && !abort; i++) {
-				const src = path.join(templateConfig.cwd, templateConfig.directory, template, files[i]);
-				const dest = path.join(templateConfig.cwd, templateConfig.dest, renderPath(files[i], config));
-				if (!overwriteAll) {
-					// eslint-disable-next-line no-await-in-loop
-					const answer = await promptIfFileExists(dest);
-					if (answer === constants.OVERWRITE_ALL) {
-						overwriteAll = true;
-					} else if (answer === constants.ABORT) {
-						abort = true;
-					}
-				}
+			fileObjects = files.map(filePath => {
+				return {
+					src: path.join(templatePath, filePath),
+					dest: path.join(templateConfig.cwd, templateConfig.dest, renderPath(filePath, config))
+				};
+			});
+		} else if (templateType === 'file') {
+			fileObjects = [{
+				src: templatePath,
+				dest: path.join(templateConfig.cwd, templateConfig.dest, template)
+			}];
+		} else {
+			throw new QGenError(`Template '${templatePath}' not found.`);
+		}
 
-				if (!abort) {
-					templateRenderer(src, templateConfig).save(dest);
+		let abort = false;
+		let overwriteAll = false;
+		for (let i = 0; i < fileObjects.length && !abort; i++) {
+			if (!overwriteAll) {
+				// eslint-disable-next-line no-await-in-loop
+				const answer = await promptIfFileExists(fileObjects[i].dest);
+
+				if (answer === constants.OVERWRITE_ALL) {
+					overwriteAll = true;
+				} else if (answer === constants.ABORT) {
+					abort = true;
 				}
 			}
-		} else if (file === 'file') {
-			const srcAbsolutePath = path.join(templateConfig.cwd, templateRelPath);
-			const destAbsolutePath = path.join(templateConfig.cwd, templateConfig.dest, template);
 
-			promptIfFileExists(destAbsolutePath)
-				.then(overwrite => {
-					if (overwrite === constants.WRITE ||
-							overwrite === constants.OVERWRITE ||
-							overwrite === constants.OVERWRITE_ALL) {
-						templateRenderer(srcAbsolutePath, templateConfig).save(destAbsolutePath);
-					}
-				});
-		} else {
-			throw new QGenError(`Template '${templateRelPath}' not found.`, file.message, file);
+			if (!abort) {
+				templateRenderer(fileObjects[i].src, templateConfig).save(fileObjects[i].dest);
+			}
 		}
 	};
-
-	if (isFileOrDir(config.directory) !== 'directory') {
-		throw new QGenError(`qgen templates directory '${config.directory}' not found.`);
-	}
 
 	return Object.freeze({
 		templates,
