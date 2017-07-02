@@ -76,10 +76,6 @@ function qgen(options) {
 	 * @return {Promise} Resolves to Array of templates if successful, else rejects with QGenError
 	 */
 	const templates = () => {
-		if (isFileOrDir(config.directory) !== 'directory') {
-			return Promise.reject(new QGenError(`qGen templates directory '${config.directory}' not found.`));
-		}
-
 		const templates = globby.sync(['*'], {
 			cwd: path.join(config.cwd, config.directory)
 		});
@@ -95,10 +91,6 @@ function qgen(options) {
 	 * @return {Promise} Resolves to undefined if success, else reject with QgenError
 	 */
 	const render = (templateName, destination) => {
-		if (isFileOrDir(config.directory) !== 'directory') {
-			return Promise.reject(new QGenError(`qGen templates directory '${config.directory}' not found.`));
-		}
-
 		let returnVal;
 
 		const templateRelPath = path.join(config.directory, templateName);
@@ -151,6 +143,10 @@ function qgen(options) {
 
 		return returnVal;
 	};
+
+	if (isFileOrDir(config.directory) !== 'directory') {
+		throw new QGenError(`qGen templates directory '${config.directory}' not found.`);
+	}
 
 	return Object.freeze({
 		templates,
