@@ -1,0 +1,10 @@
+{
+  "plugins": ["syntax-async-functions"],
+  "presets": [
+      ["env", {
+        "targets": {
+          "node": 6
+        }
+      }]
+    ]
+}

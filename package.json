@@ -5,11 +5,25 @@
   "bin": {
     "qgen": "./bin/cli.js"
   },
+  "watch": {
+    "build-and-test": {
+      "patterns": [
+        "test/fixtures/*/src/**/*",
+        "test/fixutres/*/expected/**/*",
+        "test/*.js",
+        "src/*.js",
+        "index.js"
+      ]
+    }
+  },
   "scripts": {
-    "watch:test": "npm run unit-test -- -w npm run unit-test -- -w --source './test/fixtures/*/src/**/*' './test/fixutres/*/expected/**/*' './test/*.js'",
+    "build": "babel src/qgen.js -o ./dist/qgen.js",
+    "watch:test": "npm-watch build-and-test",
     "unit-test": "ava",
     "lint": "xo",
-    "test": "npm run lint && npm run unit-test",
+    "build-and-test": "npm run build && npm run unit-test",
+    "test": "npm run lint && npm run build-and-test",
+    "prepublish": "npm run build",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
   "repository": "alarisprime/qgen",
@@ -41,9 +55,13 @@
   "devDependencies": {
     "assert-dir-equal": "^1.0.1",
     "ava": "^0.20.0",
+    "babel-cli": "^6.24.1",
+    "babel-plugin-syntax-async-functions": "^6.13.0",
+    "babel-preset-env": "^1.5.2",
     "cpy": "^5.0.0",
     "del": "^3.0.0",
     "execa": "^0.7.0",
+    "npm-watch": "^0.2.0",
     "semantic-release": "^6.3.6",
     "xo": "^0.19.0"
   },
