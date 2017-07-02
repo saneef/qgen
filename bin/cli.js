@@ -9,6 +9,11 @@ const trimNewlines = require('trim-newlines');
 const qgen = require('../');
 const constants = require('../constants');
 
+/**
+ * Displays prewritten help message to stdout
+ *
+ * @return {undefined}
+ */
 const showHelp = () => {
 	const helpText = `
 		${chalk.bold('Usage')}
@@ -29,6 +34,12 @@ const showHelp = () => {
 	console.log(help);
 };
 
+/**
+ * Displays list of available templates to stdout
+ *
+ * @param  {Object} options - options for qgen
+ * @return {undefined}
+ */
 const listTemplates = options => {
 	qgen(options)
 		.templates()
@@ -48,6 +59,7 @@ const listTemplates = options => {
 
 const argv = minimist(process.argv.slice(2));
 
+// Display help and available templates help flag is set or no arguments passed
 if (argv.help || argv._.length === 0) {
 	showHelp();
 	listTemplates(argv);

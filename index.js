@@ -1,17 +1,31 @@
 'use strict';
+/**
+ * @module qgen
+ */
 const path = require('path');
 
 const globby = require('globby');
 const Promise = require('pinkie-promise');
-
 const QGenError = require('./lib/qgen-error');
+
 const templateRenderer = require('./lib/template-renderer');
-const isFileOrDir = require('./lib/file-helpers').isFileOrDir;
+const {isFileOrDir, renderPath} = require('./lib/file-helpers');
 const promptIfFileExists = require('./lib/prompt-helpers').promptIfFileExists;
+const {
+	createConfigFilePath,
+	loadConfig,
+	createTemplateConfig
+} = require('./lib/config-helpers');
 const constants = require('./constants');
 
 const DEFAULT_DESTINATION = './';
 
+/**
+ * Creates new qgen object
+ * @name  qgen
+ * @param {Object} options - Options such as dest, config file path etc.
+ * @return {qgen}
+ */
 function qgen(options) {
 	const defaultOptions = {
 		dest: DEFAULT_DESTINATION,
@@ -20,55 +34,9 @@ function qgen(options) {
 		config: './qgen.json'
 	};
 
-	let configfilePath = path.join(defaultOptions.cwd, defaultOptions.config);
-	if (options.config) {
-		configfilePath = options.config;
-	}
-
-	let configfileOptions = {};
-	// Read the configfile if exists
-	if (isFileOrDir(configfilePath) === 'file') {
-		configfileOptions = require(configfilePath); // eslint-disable-line import/no-dynamic-require
-	}
-
+	const configfilePath = createConfigFilePath(defaultOptions, options);
+	const configfileOptions = loadConfig(configfilePath);
 	const config = Object.assign(defaultOptions, configfileOptions, options);
-
-	const generateDestFilePath = (filePath, options) => {
-		let renderedFilePath = filePath;
-		const filenameRegex = /__([^_\W]+)__/g;
-
-		renderedFilePath = filePath.replace(filenameRegex, (m, p) => {
-			return options[p] ? options[p] : `__${p}__`;
-		});
-
-		return renderedFilePath;
-	};
-
-	const generateTemplateConfig = (config, templateName) => {
-		let templateConfig = config;
-
-		// Process the additional config specific
-		// to the given template
-		if (config.templates && config.templates[templateName]) {
-			const overrides = {
-				templates: undefined
-			};
-
-			if (config.templates &&
-					config.templates[templateName] &&
-					config.templates[templateName].dest) {
-				overrides.dest = config.templates[templateName].dest;
-			}
-
-			if (config.dest !== DEFAULT_DESTINATION) {
-				overrides.dest = config.dest;
-			}
-
-			templateConfig = Object.assign({}, config.templates[templateName], config, overrides);
-		}
-
-		return templateConfig;
-	};
 
 	// This recursive function is to make the inquirer prompt work
 	// in sequential. May be, there is a better way to do this.
@@ -102,6 +70,11 @@ function qgen(options) {
 		return _r;
 	};
 
+	/**
+	 * Lists the available templates
+	 *
+	 * @return {Promise} Resolves to Array of templates if successful, else rejects with QGenError
+	 */
 	const templates = () => {
 		if (isFileOrDir(config.directory) !== 'directory') {
 			return Promise.reject(new QGenError(`qGen templates directory '${config.directory}' not found.`));
@@ -114,6 +87,13 @@ function qgen(options) {
 		return Promise.resolve(templates);
 	};
 
+	/**
+	 * Render the template file and save to the destination path
+	 *
+	 * @param  {String} templateName
+	 * @param  {String} destination
+	 * @return {Promise} Resolves to undefined if success, else reject with QgenError
+	 */
 	const render = (templateName, destination) => {
 		if (isFileOrDir(config.directory) !== 'directory') {
 			return Promise.reject(new QGenError(`qGen templates directory '${config.directory}' not found.`));
@@ -125,7 +105,7 @@ function qgen(options) {
 		const file = isFileOrDir(path.join(config.cwd, templateRelPath));
 
 		// Overwrite current config with template specific config
-		const templateConfig = generateTemplateConfig(config, templateName);
+		const templateConfig = createTemplateConfig(config, templateName, DEFAULT_DESTINATION);
 
 		// Override dest with dest from CLI
 		if (destination) {
@@ -139,7 +119,7 @@ function qgen(options) {
 			});
 
 			const fileObjects = files.map(filePath => {
-				const destFilePath = generateDestFilePath(filePath, config);
+				const destFilePath = renderPath(filePath, config);
 
 				return {
 					src: path.join(templateConfig.cwd, templateConfig.directory, templateName, filePath),

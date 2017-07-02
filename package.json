@@ -30,6 +30,7 @@
     "globby": "^6.0.0",
     "handlebars": "^4.0.5",
     "inquirer": "^3.0.0",
+    "is-relative": "^0.2.1",
     "minimist": "^1.2.0",
     "mkdirp": "^0.5.1",
     "nested-error-stacks": "^2.0.0",
