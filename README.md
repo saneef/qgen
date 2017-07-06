@@ -136,7 +136,7 @@ You can use `qgen.json` to set template directory, default destination, default 
 
 ## Contributing
 
-This package is uses [semantic-release](https://github.com/semantic-release/semantic-release) for automatically releasing. For it to work, make sure the commit messages are in [this format](https://github.com/semantic-release/semantic-release#default-commit-message-format).
+This package uses [semantic-release](https://github.com/semantic-release/semantic-release) for automatic releases. For it to work, make sure the commit messages are in [this format](https://github.com/semantic-release/semantic-release#default-commit-message-format).
 
 ## Tips & Tricks
 
