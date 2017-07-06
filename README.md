@@ -2,16 +2,16 @@
 
 [![Build Status](https://travis-ci.org/alarisprime/qgen.svg?branch=master)](https://travis-ci.org/alarisprime/qgen) [![Greenkeeper badge](https://badges.greenkeeper.io/alarisprime/qgen.svg)](https://greenkeeper.io/)
 
-q·gen generates files and folders from templates. It can generate folder structure as well as file contents.
+qgen generates files and folders from templates. It can generate folder structure as well as file contents.
 
-Some scenarios where q·gen can come handy for you:
+Some scenarios where qgen can come handy for you:
 
 - Generate the file for your next Jekyll blog post.
 - Generate files for the new React component in your current project.
 
-![](/media/qgen-example-usge.gif)
+![using qgen](/media/qgen-example-usge.gif)
 
-q·gen is inspired by envato-tuts+’s [Structurer.app](https://code.tutsplus.com/articles/free-mac-utility-app-structurer--net-17153).
+qgen is inspired by envato-tuts+’s [Structurer.app](https://code.tutsplus.com/articles/free-mac-utility-app-structurer--net-17153).
 
 ## Install
 
@@ -37,11 +37,9 @@ In your project folder (where packages.json is present), keep your templates fil
 
 ## Templates
 
-q·gen uses [Handlebars](http://handlebarsjs.com) to render the template files. So use handlebars syntax to write you generator files.
+qgen uses [Handlebars](http://handlebarsjs.com) to render the template files.
 
-The data arguments passed to CLI will be converted in camel case and passed to the template rendering engine. Eg `--page-title` can be accessed in the template using `pageTitle`.
-
-You can also use the data values to generate filename. Eg. with data `--page-title` can be used to render a filename `__pageTitle__.md`. Eg. `--page-title=today` can be used to render `__pageTitle__.md → today.md`. Data variables can be used only for files kept inside a folder. Read more on it under [Template with multiple files](#template-with-multiple-files).
+The data arguments passed to CLI will be made available inside Handlebars templates as camel case context variables. Eg `--page-title` can be accessed in the template as `pageTitle`.
 
 ### Example
 
@@ -115,6 +113,10 @@ Generated file `./Dummy/Dummy.css`
 }
 
 ```
+
+### Using variables for filenames
+
+You can use the data values to generate filename. Eg. The data from the argulment `--page-title` can be used to render a filename `__pageTitle__.md`. Eg. `--page-title=today` can be used to render `__pageTitle__.md → today.md`. Data variables can be used only for files kept inside a folder. Read more on it under [Template with multiple files](#template-with-multiple-files).
 
 ## ‘qgen.json’, The configfile
 
