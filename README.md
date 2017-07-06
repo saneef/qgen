@@ -155,4 +155,4 @@ $ qgen blog.md --filename=`date "+%Y-%m-%d"`
 
 ## License
 
-MIT © Alaris Prime, LLC
+MIT © [Alaris Prime](https://alarisprime.com/), LLC
