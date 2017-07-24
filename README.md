@@ -126,7 +126,7 @@ You can use `qgen.json` to set template directory, default destination, default 
 {
 	"directory": "./my-templates", // Default: "./qgen-templates"
 	"dest": "./pages", // Destination for all templates. Default: "./"
-	"templates": { // Default: []
+	"templates": { // Default: {}
 		"blog.md": { // These configuration will be passed while compiling template 'blog.md'
 			"title": "A Fresh Title",
 			"slug": "a-fresh-title",
