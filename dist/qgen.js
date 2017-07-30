@@ -40,7 +40,8 @@ function qgen(options) {
 		dest: DEFAULT_DESTINATION,
 		cwd: process.cwd(),
 		directory: 'qgen-templates',
-		config: './qgen.json'
+		config: './qgen.json',
+		helpers: undefined
 	};
 
 	const configfilePath = createConfigFilePath(defaultOptions, options);

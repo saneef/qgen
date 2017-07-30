@@ -126,6 +126,7 @@ You can use `qgen.json` to set template directory, default destination, default 
 {
 	"directory": "./my-templates", // Default: "./qgen-templates"
 	"dest": "./pages", // Destination for all templates. Default: "./"
+	"helpers": "./handlebar-helpers.js", // Path to the Handlebars helpers. Default: undefined
 	"templates": { // Default: {}
 		"blog.md": { // These configuration will be passed while compiling template 'blog.md'
 			"title": "A Fresh Title",
@@ -135,6 +136,10 @@ You can use `qgen.json` to set template directory, default destination, default 
 	}
 }
 ```
+
+## Using Handlebars
+
+You can load custom Handlebar helpers to qgen’s Handlerbars rendering engine. Pass the path to the file which exports the helper functions to the option `helpers` either throught CLI param or through config file. Here is a [sample helpers file](./test/fixtures/render-with-helper/build/qgen-helpers.js) which export two custom helpers.
 
 ## Contributing
 
@@ -152,8 +157,8 @@ $ qgen blog.md --filename=`date "+%Y-%m-%d"`
 
 ## Features to be implemented
 
+- [x] ability to add plugin [helpers](http://handlebarsjs.com/expressions.html#helpers)
 - [ ] Use date and other dynamic data for variables. For now, read [Tips & Tricks](#tips--tricks)
-- [ ] ability to add plugin [helpers](http://handlebarsjs.com/expressions.html#helpers)
 
 ## License
 
