@@ -137,9 +137,9 @@ You can use `qgen.json` to set template directory, default destination, default 
 }
 ```
 
-## Using Handlebars
+## Using Handlebars Custom Helpers
 
-You can load custom Handlebar helpers to qgen’s Handlerbars rendering engine. Pass the path to the file which exports the helper functions to the option `helpers` either throught CLI param or through config file. Here is a [sample helpers file](./test/fixtures/render-with-helper/build/qgen-helpers.js) which export two custom helpers.
+You can load custom Handlebar helpers to qgen’s Handlerbars rendering engine. Pass the path to the file which exports the helper functions to the option `helpers`, either through the CLI param or, through config file. Here is a [sample file](./test/fixtures/render-with-helper/src/qgen-helpers.js) which exports two custom helpers.
 
 ## Contributing
 
