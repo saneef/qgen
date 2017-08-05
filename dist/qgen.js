@@ -8,24 +8,24 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 const path = require('path');
 
 const globby = require('globby');
-const QGenError = require('../lib/qgen-error');
+const QGenError = require('./lib/qgen-error');
 
-const templateRenderer = require('../lib/template-renderer');
+const templateFileRenderer = require('./lib/template-file-renderer');
 
-var _require = require('../lib/file-helpers');
+var _require = require('./lib/file-helpers');
 
 const isFileOrDir = _require.isFileOrDir,
       renderPath = _require.renderPath;
 
-const promptIfFileExists = require('../lib/prompt-helpers').promptIfFileExists;
+const promptIfFileExists = require('./lib/prompt-helpers').promptIfFileExists;
 
-var _require2 = require('../lib/config-helpers');
+var _require2 = require('./lib/config-helpers');
 
 const createConfigFilePath = _require2.createConfigFilePath,
       loadConfig = _require2.loadConfig,
       createTemplateConfig = _require2.createTemplateConfig;
 
-const constants = require('../constants');
+const constants = require('./constants');
 
 const DEFAULT_DESTINATION = './';
 
@@ -119,7 +119,7 @@ function qgen(options) {
 				}
 
 				if (!abort) {
-					templateRenderer(fileObjects[i].src, templateConfig).save(fileObjects[i].dest);
+					templateFileRenderer(fileObjects[i].src, templateConfig).save(fileObjects[i].dest);
 				}
 			}
 		});

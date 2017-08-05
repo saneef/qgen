@@ -5,17 +5,17 @@
 const path = require('path');
 
 const globby = require('globby');
-const QGenError = require('../lib/qgen-error');
+const QGenError = require('./lib/qgen-error');
 
-const templateRenderer = require('../lib/template-renderer');
-const {isFileOrDir, renderPath} = require('../lib/file-helpers');
-const promptIfFileExists = require('../lib/prompt-helpers').promptIfFileExists;
+const templateFileRenderer = require('./lib/template-file-renderer');
+const {isFileOrDir, renderPath} = require('./lib/file-helpers');
+const promptIfFileExists = require('./lib/prompt-helpers').promptIfFileExists;
 const {
 	createConfigFilePath,
 	loadConfig,
 	createTemplateConfig
-} = require('../lib/config-helpers');
-const constants = require('../constants');
+} = require('./lib/config-helpers');
+const constants = require('./constants');
 
 const DEFAULT_DESTINATION = './';
 
@@ -108,7 +108,7 @@ function qgen(options) {
 			}
 
 			if (!abort) {
-				templateRenderer(fileObjects[i].src, templateConfig).save(fileObjects[i].dest);
+				templateFileRenderer(fileObjects[i].src, templateConfig).save(fileObjects[i].dest);
 			}
 		}
 	};
