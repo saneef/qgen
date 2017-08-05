@@ -48,7 +48,6 @@
     "meow": "^3.7.0",
     "mkdirp": "^0.5.1",
     "nested-error-stacks": "^2.0.0",
-    "pinkie-promise": "^2.0.1",
     "redent": "^2.0.0",
     "trim-newlines": "^2.0.0"
   },
