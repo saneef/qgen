@@ -6,9 +6,9 @@ const path = require('path');
 
 const globby = require('globby');
 const QGenError = require('./lib/qgen-error');
-
+const templateRenderer = require('./lib/template-renderer');
 const templateFileRenderer = require('./lib/template-file-renderer');
-const {isFileOrDir, renderPath} = require('./lib/file-helpers');
+const {isFileOrDir} = require('./lib/file-helpers');
 const promptIfFileExists = require('./lib/prompt-helpers').promptIfFileExists;
 const {
 	createConfigFilePath,
@@ -64,6 +64,10 @@ function qgen(options) {
 		const templatePath = path.join(config.directory, template);
 		const templateType = isFileOrDir(path.join(config.cwd, templatePath));
 		const templateConfig = createTemplateConfig(config, template, DEFAULT_DESTINATION);
+		const filepathRenderer = templateRenderer({
+			helpers: config.helpers,
+			cwd: config.cwd
+		});
 
 		// Override config dest with passed destination
 		if (destination) {
@@ -81,7 +85,7 @@ function qgen(options) {
 			fileObjects = files.map(filePath => {
 				return {
 					src: path.join(templatePath, filePath),
-					dest: path.join(templateConfig.cwd, templateConfig.dest, renderPath(filePath, config))
+					dest: path.join(templateConfig.cwd, templateConfig.dest, filepathRenderer.render(filePath, config))
 				};
 			});
 		} else if (templateType === 'file') {

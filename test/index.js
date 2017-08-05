@@ -79,7 +79,7 @@ test('should generate destination from CLI, overriding global destination from c
 
 test('should generate with Handlebars helper functions', async () => {
 	await readyBuildFromSrc('render-with-helper');
-	await execa(binPath, ['blog.md', '--title=A fresh title', '--slug=a-fresh-title', '--helpers=./qgen-helpers.js'], {
+	await execa(binPath, ['blog', '--title=A fresh title', '--slug=a-fresh-title', '--helpers=./qgen-helpers.js'], {
 		cwd: path.join(fixturesBasePath, './render-with-helper/build')
 	});
 	await folderEquals(path.join(fixturesBasePath, 'render-with-helper/build'), path.join(fixturesBasePath, 'render-with-helper/expected'));
