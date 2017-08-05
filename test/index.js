@@ -38,7 +38,7 @@ test('should show help message when executed without any arguments,', async t =>
 
 test('should list available templates', async t => {
 	await readyBuildFromSrc('single-file');
-	const result = await execa(binPath, ['--help'], {
+	const result = await execa(binPath, [], {
 		cwd: path.join(fixturesBasePath, './single-file/build')
 	});
 	t.regex(result.stdout, /Available Templates/g);
