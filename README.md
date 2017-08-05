@@ -72,7 +72,7 @@ slug: hello-world
 
 Keep all the files inside `./qgen-templates/my-component`, where `my-component` will be the name of the template.
 
-File `./qgen-templates/__title__.jsx`
+File `./qgen-templates/{{title}}.jsx`
 
 ```jsx
 import React, { PropTypes } from 'react';
@@ -83,7 +83,7 @@ export default {{title}};
 
 ```
 
-File `./qgen-templates/__title__.css`
+File `./qgen-templates/{{title}}.css`
 
 ```css
 .{{className}} {
@@ -114,9 +114,13 @@ Generated file `./Dummy/Dummy.css`
 
 ```
 
-### Using variables for filenames
+### Templating filenames
 
-You can use the data values to generate filename. Eg. The data from the argulment `--page-title` can be used to render a filename `__pageTitle__.md`. Eg. `--page-title=today` can be used to render `__pageTitle__.md → today.md`. Data variables can be used only for files kept inside a folder. Read more on it under [Template with multiple files](#template-with-multiple-files).
+You can use Handlebars templates to generate the filenames too.
+
+_Example:_ `{{pageTitle}}.md` file will be renamed to `today.md`, if you pass argument `--page-title today` while using qgen.
+
+**Note:** Templates for filenames can only be used for files kept inside a folder. Read more on it under [Template with multiple files](#template-with-multiple-files).
 
 ## ‘qgen.json’, The configfile
 
@@ -139,7 +143,7 @@ You can use `qgen.json` to set template directory, default destination, default 
 
 ## Using Handlebars Custom Helpers
 
-You can load custom Handlebar helpers to qgen’s Handlerbars rendering engine. Pass the path to the file which exports the helper functions to the option `helpers`, either through the CLI param or, through config file. Here is a [sample file](./test/fixtures/render-with-helper/src/qgen-helpers.js) which exports two custom helpers.
+You can load custom Handlebars helpers to qgen’s Handlerbars rendering engine. Pass the path to the file which exports the helper functions to the option `helpers`, either through the CLI param or, through config file. Here is a [sample file](./test/fixtures/render-with-helper/src/qgen-helpers.js) which exports two custom helpers.
 
 ## Contributing
 
@@ -154,11 +158,6 @@ Make use of the system `date` shell command.
 ```bash
 $ qgen blog.md --filename=`date "+%Y-%m-%d"`
 ```
-
-## Features to be implemented
-
-- [x] ability to add plugin [helpers](http://handlebarsjs.com/expressions.html#helpers)
-- [ ] Use date and other dynamic data for variables. For now, read [Tips & Tricks](#tips--tricks)
 
 ## License
 
