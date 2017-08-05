@@ -2,29 +2,21 @@
 
 const fs = require('fs');
 const path = require('path');
-const Handlebars = require('handlebars');
 const mkdirp = require('mkdirp');
+const templateRenderer = require('./template-renderer');
 const isFileOrDir = require('./file-helpers').isFileOrDir;
 
-const templateRenderer = (src, config) => {
+const templateFileRenderer = (src, config) => {
 	let renderedContent;
-	const handlebars = Handlebars;
-
-	if (config.helpers) {
-		let helperFilePath = config.helpers;
-
-		if (!path.isAbsolute(helperFilePath)) {
-			helperFilePath = path.join(config.cwd, helperFilePath);
-		}
-
-		handlebars.registerHelper(require(helperFilePath));
-	}
+	const renderer = templateRenderer({
+		helpers: config.helpers,
+		cwd: config.cwd
+	});
 
 	const render = () => {
 		// Encoding is set as 'utf8' to get the return value as string
 		const templateFile = fs.readFileSync(src, 'utf8');
-		const compiledTemplate = handlebars.compile(templateFile);
-		renderedContent = compiledTemplate(config);
+		renderedContent = renderer.render(templateFile, config);
 		return renderedContent;
 	};
 
@@ -57,4 +49,4 @@ const templateRenderer = (src, config) => {
 	});
 };
 
-module.exports = templateRenderer;
+module.exports = templateFileRenderer;
