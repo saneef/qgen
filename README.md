@@ -145,10 +145,6 @@ You can use `qgen.json` to set template directory, default destination, default 
 
 You can load custom Handlebars helpers to qgen’s Handlerbars rendering engine. Pass the path to the file which exports the helper functions to the option `helpers`, either through the CLI param or, through config file. Here is a [sample file](./test/fixtures/render-with-helper/src/qgen-helpers.js) which exports two custom helpers.
 
-## Contributing
-
-This package uses [semantic-release](https://github.com/semantic-release/semantic-release) for automatic releases. For it to work, make sure the commit messages are in [this format](https://github.com/semantic-release/semantic-release#default-commit-message-format).
-
 ## Tips & Tricks
 
 ### Want to set a variable to today’s date?
