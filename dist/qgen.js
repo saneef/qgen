@@ -110,9 +110,10 @@ function qgen(options) {
 			let abort = false;
 			let overwriteAll = false;
 			for (let i = 0; i < fileObjects.length && !abort; i++) {
+				let answer;
 				if (!overwriteAll) {
 					// eslint-disable-next-line no-await-in-loop
-					const answer = yield promptIfFileExists(fileObjects[i].dest);
+					answer = yield promptIfFileExists(fileObjects[i].dest);
 
 					if (answer === constants.OVERWRITE_ALL) {
 						overwriteAll = true;
@@ -121,7 +122,7 @@ function qgen(options) {
 					}
 				}
 
-				if (!abort) {
+				if (answer !== undefined && !abort) {
 					templateFileRenderer(fileObjects[i].src, templateConfig).save(fileObjects[i].dest);
 				}
 			}
