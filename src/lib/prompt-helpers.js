@@ -4,7 +4,7 @@ import inquirer from 'inquirer';
 import constants from '../constants';
 import {isFileOrDir} from './file-helpers';
 
-async function promptForOverwrite(file) {
+function promptForOverwrite(file) {
 	const answers = inquirer.prompt([{
 		type: 'expand',
 		message: `Do you want to overwrite the file ${file}: `,
