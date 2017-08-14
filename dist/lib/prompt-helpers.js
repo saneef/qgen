@@ -1,5 +1,11 @@
 'use strict';
 
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.promptForOverwrite = promptForOverwrite;
+exports.promptIfFileExists = promptIfFileExists;
+
 var _inquirer = require('inquirer');
 
 var _inquirer2 = _interopRequireDefault(_inquirer);
@@ -32,7 +38,7 @@ function promptForOverwrite(file) {
 		}]
 	}]);
 
-	return answers.overwrite;
+	return answers;
 }
 
 function promptIfFileExists(file) {
@@ -40,12 +46,9 @@ function promptIfFileExists(file) {
 	if ((0, _fileHelpers.isFileOrDir)(file) === 'file') {
 		r = promptForOverwrite(file);
 	} else {
-		r = Promise.resolve(_constants2.default.WRITE);
+		r = Promise.resolve({
+			overwrite: _constants2.default.WRITE
+		});
 	}
 	return r;
 }
-
-module.exports = {
-	promptForOverwrite,
-	promptIfFileExists
-};

@@ -3,28 +3,39 @@
  * @module qgen
  */
 
+var _path = require('path');
+
+var _path2 = _interopRequireDefault(_path);
+
+var _globby = require('globby');
+
+var _globby2 = _interopRequireDefault(_globby);
+
+var _qgenError = require('./lib/qgen-error');
+
+var _qgenError2 = _interopRequireDefault(_qgenError);
+
+var _templateRenderer = require('./lib/template-renderer');
+
+var _templateRenderer2 = _interopRequireDefault(_templateRenderer);
+
+var _templateFileRenderer = require('./lib/template-file-renderer');
+
+var _templateFileRenderer2 = _interopRequireDefault(_templateFileRenderer);
+
+var _fileHelpers = require('./lib/file-helpers');
+
+var _promptHelpers = require('./lib/prompt-helpers');
+
+var _configHelpers = require('./lib/config-helpers');
+
+var _constants = require('./constants');
+
+var _constants2 = _interopRequireDefault(_constants);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
-
-const path = require('path');
-
-const globby = require('globby');
-const QGenError = require('./lib/qgen-error');
-const templateRenderer = require('./lib/template-renderer');
-const templateFileRenderer = require('./lib/template-file-renderer');
-
-var _require = require('./lib/file-helpers');
-
-const isFileOrDir = _require.isFileOrDir;
-
-const promptIfFileExists = require('./lib/prompt-helpers').promptIfFileExists;
-
-var _require2 = require('./lib/config-helpers');
-
-const createConfigFilePath = _require2.createConfigFilePath,
-      loadConfig = _require2.loadConfig,
-      createTemplateConfig = _require2.createTemplateConfig;
-
-const constants = require('./constants');
 
 const DEFAULT_DESTINATION = './';
 
@@ -43,13 +54,13 @@ function qgen(options) {
 		helpers: undefined
 	};
 
-	const configfilePath = createConfigFilePath(defaultOptions, options);
-	const configfileOptions = loadConfig(configfilePath);
+	const configfilePath = (0, _configHelpers.createConfigFilePath)(defaultOptions, options);
+	const configfileOptions = (0, _configHelpers.loadConfig)(configfilePath);
 	const config = Object.assign(defaultOptions, configfileOptions, options);
 
 	/** Throw error if qgen template directory is missing */
-	if (isFileOrDir(config.directory) !== 'directory') {
-		throw new QGenError(`qgen templates directory '${config.directory}' not found.`);
+	if ((0, _fileHelpers.isFileOrDir)(config.directory) !== 'directory') {
+		throw new _qgenError2.default(`qgen templates directory '${config.directory}' not found.`);
 	}
 
 	/**
@@ -58,8 +69,8 @@ function qgen(options) {
   * @return {Array} available template names
   */
 	const templates = () => {
-		return globby.sync(['*'], {
-			cwd: path.join(config.cwd, config.directory)
+		return _globby2.default.sync(['*'], {
+			cwd: _path2.default.join(config.cwd, config.directory)
 		});
 	};
 
@@ -71,10 +82,10 @@ function qgen(options) {
   */
 	const render = (() => {
 		var _ref = _asyncToGenerator(function* (template, destination) {
-			const templatePath = path.join(config.directory, template);
-			const templateType = isFileOrDir(path.join(config.cwd, templatePath));
-			const templateConfig = createTemplateConfig(config, template, DEFAULT_DESTINATION);
-			const filepathRenderer = templateRenderer({
+			const templatePath = _path2.default.join(config.directory, template);
+			const templateType = (0, _fileHelpers.isFileOrDir)(_path2.default.join(config.cwd, templatePath));
+			const templateConfig = (0, _configHelpers.createTemplateConfig)(config, template, DEFAULT_DESTINATION);
+			const filepathRenderer = (0, _templateRenderer2.default)({
 				helpers: config.helpers,
 				cwd: config.cwd
 			});
@@ -87,43 +98,42 @@ function qgen(options) {
 			let fileObjects;
 
 			if (templateType === 'directory') {
-				const files = globby.sync(['**/*'], {
-					cwd: path.join(config.cwd, templatePath),
+				const files = _globby2.default.sync(['**/*'], {
+					cwd: _path2.default.join(config.cwd, templatePath),
 					nodir: true
 				});
 
 				fileObjects = files.map(function (filePath) {
 					return {
-						src: path.join(templatePath, filePath),
-						dest: path.join(templateConfig.cwd, templateConfig.dest, filepathRenderer.render(filePath, config))
+						src: _path2.default.join(templatePath, filePath),
+						dest: _path2.default.join(templateConfig.cwd, templateConfig.dest, filepathRenderer.render(filePath, config))
 					};
 				});
 			} else if (templateType === 'file') {
 				fileObjects = [{
 					src: templatePath,
-					dest: path.join(templateConfig.cwd, templateConfig.dest, template)
+					dest: _path2.default.join(templateConfig.cwd, templateConfig.dest, template)
 				}];
 			} else {
-				throw new QGenError(`Template '${templatePath}' not found.`);
+				throw new _qgenError2.default(`Template '${templatePath}' not found.`);
 			}
 
 			let abort = false;
 			let overwriteAll = false;
 			for (let i = 0; i < fileObjects.length && !abort; i++) {
-				let answer;
 				if (!overwriteAll) {
 					// eslint-disable-next-line no-await-in-loop
-					answer = yield promptIfFileExists(fileObjects[i].dest);
+					const answer = yield (0, _promptHelpers.promptIfFileExists)(fileObjects[i].dest);
 
-					if (answer === constants.OVERWRITE_ALL) {
+					if (answer.overwrite === _constants2.default.OVERWRITE_ALL) {
 						overwriteAll = true;
-					} else if (answer === constants.ABORT) {
+					} else if (answer.overwrite === _constants2.default.ABORT) {
 						abort = true;
 					}
 				}
 
-				if (answer !== undefined && !abort) {
-					templateFileRenderer(fileObjects[i].src, templateConfig).save(fileObjects[i].dest);
+				if (!abort) {
+					(0, _templateFileRenderer2.default)(fileObjects[i].src, templateConfig).save(fileObjects[i].dest);
 				}
 			}
 		});

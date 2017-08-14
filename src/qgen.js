@@ -2,20 +2,21 @@
 /**
  * @module qgen
  */
-const path = require('path');
+import path from 'path';
 
-const globby = require('globby');
-const QGenError = require('./lib/qgen-error');
-const templateRenderer = require('./lib/template-renderer');
-const templateFileRenderer = require('./lib/template-file-renderer');
-const {isFileOrDir} = require('./lib/file-helpers');
-const promptIfFileExists = require('./lib/prompt-helpers').promptIfFileExists;
-const {
+import globby from 'globby';
+
+import QGenError from './lib/qgen-error';
+import templateRenderer from './lib/template-renderer';
+import templateFileRenderer from './lib/template-file-renderer';
+import {isFileOrDir} from './lib/file-helpers';
+import {promptIfFileExists} from './lib/prompt-helpers';
+import {
 	createConfigFilePath,
 	loadConfig,
 	createTemplateConfig
-} = require('./lib/config-helpers');
-const constants = require('./constants');
+} from './lib/config-helpers';
+import constants from './constants';
 
 const DEFAULT_DESTINATION = './';
 
@@ -100,19 +101,18 @@ function qgen(options) {
 		let abort = false;
 		let overwriteAll = false;
 		for (let i = 0; i < fileObjects.length && !abort; i++) {
-			let answer;
 			if (!overwriteAll) {
 				// eslint-disable-next-line no-await-in-loop
-				answer = await promptIfFileExists(fileObjects[i].dest);
+				const answer = await promptIfFileExists(fileObjects[i].dest);
 
-				if (answer === constants.OVERWRITE_ALL) {
+				if (answer.overwrite === constants.OVERWRITE_ALL) {
 					overwriteAll = true;
-				} else if (answer === constants.ABORT) {
+				} else if (answer.overwrite === constants.ABORT) {
 					abort = true;
 				}
 			}
 
-			if ((answer !== undefined) && !abort) {
+			if (!abort) {
 				templateFileRenderer(fileObjects[i].src, templateConfig).save(fileObjects[i].dest);
 			}
 		}

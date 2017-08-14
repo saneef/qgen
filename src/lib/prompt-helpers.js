@@ -4,7 +4,7 @@ import inquirer from 'inquirer';
 import constants from '../constants';
 import {isFileOrDir} from './file-helpers';
 
-function promptForOverwrite(file) {
+export function promptForOverwrite(file) {
 	const answers = inquirer.prompt([{
 		type: 'expand',
 		message: `Do you want to overwrite the file ${file}: `,
@@ -29,20 +29,17 @@ function promptForOverwrite(file) {
 		]
 	}]);
 
-	return answers.overwrite;
+	return answers;
 }
 
-function promptIfFileExists(file) {
+export function promptIfFileExists(file) {
 	let r;
 	if (isFileOrDir(file) === 'file') {
 		r = promptForOverwrite(file);
 	} else {
-		r = Promise.resolve(constants.WRITE);
+		r = Promise.resolve({
+			overwrite: constants.WRITE
+		});
 	}
 	return r;
 }
-
-module.exports = {
-	promptForOverwrite,
-	promptIfFileExists
-};
