@@ -20,9 +20,14 @@ const cli = meow(`
 		$ qgen post ./pages ${chalk.dim('# generates the post template inside ./pages')}
 		$ qgen post ./pages --page-title "Hello World" ${chalk.dim('# generates the post template in inside ./pages with data field pageTitle="Hello World" to the template rendering engine')}
 `, {
-	alias: {
-		d: 'directory',
-		c: 'config'
+	flags: {
+		directory: {
+			type: 'string',
+			alias: 'd'
+		},
+		config: {
+			alias: 'c'
+		}
 	}
 });
 
