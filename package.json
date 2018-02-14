@@ -24,7 +24,8 @@
     "build-and-test": "npm run build && npm run unit-test",
     "test": "npm run lint && npm run build-and-test",
     "prepublish": "npm run build",
-    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
+    "semantic-release": "semantic-release",
+    "travis-deploy-once": "travis-deploy-once"
   },
   "repository": "alarisprime/qgen",
   "keywords": [
@@ -61,8 +62,9 @@
     "del": "^3.0.0",
     "execa": "^0.9.0",
     "npm-watch": "^0.3.0",
-    "semantic-release": "^12.2.2",
-    "xo": "^0.20.0"
+    "semantic-release": "^12.4.1",
+    "xo": "^0.20.0",
+    "travis-deploy-once": "^4.3.4"
   },
   "xo": {
     "esnext": true
