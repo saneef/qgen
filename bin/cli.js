@@ -5,7 +5,7 @@ const chalk = require('chalk');
 const meow = require('meow');
 const redent = require('redent');
 
-const qgen = require('../');
+const qgen = require('..');
 
 const cli = meow(`
 	${chalk.bold('Usage')}
