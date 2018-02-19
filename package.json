@@ -41,10 +41,10 @@
   },
   "homepage": "https://github.com/alarisprime/qgen#readme",
   "dependencies": {
-    "chalk": "^2.1.0",
-    "globby": "^8.0.0",
-    "handlebars": "^4.0.10",
-    "inquirer": "^5.0.0",
+    "chalk": "^2.3.1",
+    "globby": "^8.0.1",
+    "handlebars": "^4.0.11",
+    "inquirer": "^5.1.0",
     "is-relative": "^1.0.0",
     "meow": "^4.0.0",
     "mkdirp": "^0.5.1",
@@ -53,17 +53,17 @@
     "trim-newlines": "^2.0.0"
   },
   "devDependencies": {
-    "assert-dir-equal": "^1.0.1",
+    "assert-dir-equal": "^1.1.0",
     "ava": "^0.25.0",
-    "babel-cli": "^6.24.1",
+    "babel-cli": "^6.26.0",
     "babel-plugin-syntax-async-functions": "^6.13.0",
-    "babel-preset-env": "^1.6.0",
+    "babel-preset-env": "^1.6.1",
     "cpy": "^6.0.0",
     "del": "^3.0.0",
     "execa": "^0.9.0",
     "npm-watch": "^0.3.0",
     "semantic-release": "^12.4.1",
-    "xo": "^0.20.0",
+    "xo": "^0.20.3",
     "travis-deploy-once": "^4.3.4"
   },
   "xo": {
