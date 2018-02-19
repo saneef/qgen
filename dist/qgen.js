@@ -1,3 +1,4 @@
+/* eslint-disable no-await-in-loop */
 'use strict';
 /**
  * @module qgen
@@ -122,7 +123,6 @@ function qgen(options) {
 			let overwriteAll = false;
 			for (let i = 0; i < fileObjects.length && !abort; i++) {
 				if (!overwriteAll) {
-					// eslint-disable-next-line no-await-in-loop
 					const answer = yield (0, _promptHelpers.promptIfFileExists)(fileObjects[i].dest);
 
 					if (answer.overwrite === _constants2.default.OVERWRITE_ALL) {
