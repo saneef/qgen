@@ -62,7 +62,7 @@
     "del": "^3.0.0",
     "execa": "^0.9.0",
     "npm-watch": "^0.3.0",
-    "semantic-release": "^12.4.1",
+    "semantic-release": "^15.0.0",
     "xo": "^0.20.3",
     "travis-deploy-once": "^4.3.4"
   },
