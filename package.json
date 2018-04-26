@@ -46,7 +46,7 @@
     "handlebars": "^4.0.11",
     "inquirer": "^5.1.0",
     "is-relative": "^1.0.0",
-    "meow": "^4.0.0",
+    "meow": "^5.0.0",
     "mkdirp": "^0.5.1",
     "nested-error-stacks": "^2.0.0",
     "redent": "^2.0.0",
