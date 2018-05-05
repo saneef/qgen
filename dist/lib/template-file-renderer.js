@@ -4,7 +4,11 @@ const fs = require('fs');
 const path = require('path');
 const mkdirp = require('mkdirp');
 const templateRenderer = require('./template-renderer');
-const isFileOrDir = require('./file-helpers').isFileOrDir;
+
+var _require = require('./file-helpers');
+
+const isFileOrDir = _require.isFileOrDir;
+
 
 const templateFileRenderer = (src, config) => {
 	let renderedContent;

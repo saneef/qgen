@@ -23,9 +23,8 @@ const DEFAULT_DESTINATION = './';
 
 /**
  * Creates new qgen object
- * @name  qgen
  * @param {Object} options - Options such as dest, config file path etc.
- * @return {qgen}
+ * @returns {qgen} qgen object
  */
 function qgen(options) {
 	const defaultOptions = {
@@ -58,9 +57,8 @@ function qgen(options) {
 
 	/**
 	 * Render the template file and save to the destination path
-	 *
-	 * @param  {String} template
-	 * @param  {String} destination
+	 * @param  {String} template The name of the template
+	 * @param  {String} destination Destination path
 	 */
 	const render = async (template, destination) => {
 		const templatePath = path.join(config.directory, template);
