@@ -36,13 +36,22 @@ test('should show help message when executed without any arguments,', async t =>
 	t.regex(result.stdout, /Usage/g);
 });
 
-test('should list available templates', async t => {
+test('should list available file templates', async t => {
 	await readyBuildFromSrc('single-file');
 	const result = await execa(binPath, [], {
 		cwd: path.join(fixturesBasePath, './single-file/build')
 	});
 	t.regex(result.stdout, /Available Templates/g);
 	t.regex(result.stdout, /blog\.md/g);
+});
+
+test('should list available folder templates', async t => {
+	await readyBuildFromSrc('folder-of-files');
+	const result = await execa(binPath, [], {
+		cwd: path.join(fixturesBasePath, './folder-of-files/build')
+	});
+	t.regex(result.stdout, /Available Templates/g);
+	t.regex(result.stdout, /react-component/g);
 });
 
 test('should generate from a single file', async () => {
