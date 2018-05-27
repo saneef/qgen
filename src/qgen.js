@@ -51,7 +51,9 @@ function qgen(options) {
 	 */
 	const templates = () => {
 		return globby.sync(['*'], {
-			cwd: path.join(config.cwd, config.directory)
+			cwd: path.join(config.cwd, config.directory),
+			expandDirectories: false,
+			onlyFiles: false
 		});
 	};
 
