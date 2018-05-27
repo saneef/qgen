@@ -70,7 +70,9 @@ function qgen(options) {
   */
 	const templates = () => {
 		return _globby2.default.sync(['*'], {
-			cwd: _path2.default.join(config.cwd, config.directory)
+			cwd: _path2.default.join(config.cwd, config.directory),
+			expandDirectories: false,
+			onlyFiles: false
 		});
 	};
 
