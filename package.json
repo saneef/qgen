@@ -44,7 +44,7 @@
     "chalk": "^2.3.1",
     "globby": "^8.0.1",
     "handlebars": "^4.0.11",
-    "inquirer": "^5.1.0",
+    "inquirer": "^6.0.0",
     "is-relative": "^1.0.0",
     "meow": "^5.0.0",
     "mkdirp": "^0.5.1",
