@@ -41,15 +41,15 @@ const listTemplates = options => {
 	try {
 		const templates = qgen(options).templates();
 		if (Array.isArray(templates) && templates.length > 0) {
-			console.log(redent(`	`, 2)); // For one line space
+			console.log(redent('	', 2)); // For one line space
 			console.log(redent(`	${chalk.bold('Available Templates')}`, 2));
 			templates.forEach(template => {
 				console.log(redent(`${template}`, 4));
 			});
 		}
-	} catch (err) {
-		console.log(redent(`	`, 2)); // For one line space
-		console.error(err.message);
+	} catch (error) {
+		console.log(redent('	', 2)); // For one line space
+		console.error(error.message);
 		process.exit(2);
 	}
 };
@@ -60,8 +60,8 @@ if (cli.input.length === 0) {
 } else {
 	try {
 		qgen(cli.flags).render(cli.input[0], cli.input[1]);
-	} catch (err) {
-		console.error(err.message);
+	} catch (error) {
+		console.error(error.message);
 		process.exit(1);
 	}
 }

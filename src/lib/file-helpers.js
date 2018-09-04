@@ -11,8 +11,8 @@ function isFileOrDir(filePath) {
 	let fsStat;
 	try {
 		fsStat = fs.statSync(filePath);
-	} catch (err) {
-		return err;
+	} catch (error) {
+		return error;
 	}
 
 	let r = 'file';
