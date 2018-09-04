@@ -34,8 +34,8 @@ const templateFileRenderer = (src, config) => {
 				fs.writeFileSync(dest, content);
 
 				savedPath = dest;
-			} catch (err) {
-				throw (err);
+			} catch (error) {
+				throw (error);
 			}
 		}
 

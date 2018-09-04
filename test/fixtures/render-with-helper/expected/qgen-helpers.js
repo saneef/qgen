@@ -1,12 +1,12 @@
-const lowercase = function(str) {
+const lowercase = function (str) {
 	return str.toLowerCase();
 };
 
-const uppercase = function(str) {
+const uppercase = function (str) {
 	return str.toUpperCase();
 };
 
 module.exports = {
-	lowercase: lowercase,
-	uppercase: uppercase
-}
+	lowercase,
+	uppercase
+};
