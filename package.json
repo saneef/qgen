@@ -23,7 +23,7 @@
     "lint": "xo",
     "build-and-test": "npm run build && npm run unit-test",
     "test": "npm run lint && npm run build-and-test",
-    "prepublish": "npm run build",
+    "prepare": "npm run build",
     "semantic-release": "semantic-release",
     "travis-deploy-once": "travis-deploy-once"
   },
