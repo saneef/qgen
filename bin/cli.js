@@ -12,7 +12,7 @@ const cli = meow(`
 		$ qgen <template name> [dest] [arguments] [options]
 
 	${chalk.bold('Options')}
-		-d, --directory <dir>	Templates directory (defaults to ./gqen-templates)
+		-d, --directory <dir>	Templates directory (defaults to ./qgen-templates)
 		-c, --config <path>	Path to the JSON config file (defaults to ./qgen.json)
 
 	${chalk.bold('Examples')}
