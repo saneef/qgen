@@ -131,6 +131,9 @@ You can use `qgen.json` to set template directory, default destination, default 
 	"directory": "./my-templates", // Default: "./qgen-templates"
 	"dest": "./pages", // Destination for all templates. Default: "./"
 	"helpers": "./handlebar-helpers.js", // Path to the Handlebars helpers. Default: undefined
+	"postHooks": { // Path to the post hook script. Default: undefined
+		"append.csv": "./qgen-hooks/append.js"
+	},
 	"templates": { // Default: {}
 		"blog.md": { // These configuration will be passed while compiling template 'blog.md'
 			"title": "A Fresh Title",
@@ -144,6 +147,22 @@ You can use `qgen.json` to set template directory, default destination, default 
 ## Using Handlebars Custom Helpers
 
 You can load custom Handlebars helpers to qgen’s Handlerbars rendering engine. Pass the path to the file which exports the helper functions to the option `helpers`, either through the CLI param or, through config file. Here is a [sample file](./test/fixtures/render-with-helper/src/qgen-helpers.js) which exports two custom helpers.
+
+## Using Post Hook Script
+
+You can merge existing file with rendered content. Pass the pair of path to the template file and hook script to the option `postHooks` like below.
+
+```javascript
+{
+  "postHooks": {
+    "csv-stuff/append.csv": "./qgen-hooks/append.js"
+  }
+}
+```
+
+This post hook script (`./qgen-hooks/append.js`) will be applied when the template (`csv-stuff/append.csv`) is in rendering to `dest/append.csv`.
+
+Here is a [sample file](./test/fixtures/post-hook/src/qgen-hooks/append.js) which appends rendered content into original content.
 
 ## Tips & Tricks
 
