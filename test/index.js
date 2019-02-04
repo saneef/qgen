@@ -101,3 +101,14 @@ test('should generate from a folder', async () => {
 	});
 	await folderEquals(path.join(fixturesBasePath, 'folder-of-files/build'), path.join(fixturesBasePath, 'folder-of-files/expected'));
 });
+
+/*
+// this test will never finish by inquirer.prompt
+test('should apply hook', async () => {
+	await readyBuildFromSrc('post-hook');
+	await execa(binPath, ['csv-stuff', './Dummy', '--title=Dummy', '--className=dummy'], {
+		cwd: path.join(fixturesBasePath, './post-hook/build')
+	});
+	await folderEquals(path.join(fixturesBasePath, 'post-hook/build'), path.join(fixturesBasePath, 'post-hook/expected'));
+});
+*/

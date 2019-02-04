@@ -1,0 +1,5 @@
+{
+  "postHooks": {
+    "csv-stuff/append.csv": "./qgen-hooks/append.js"
+  }
+}
