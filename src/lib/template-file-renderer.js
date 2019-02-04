@@ -20,7 +20,7 @@ const templateFileRenderer = (src, config) => {
 	};
 
 	const save = dest => {
-		const content = renderedContent || render();
+		let content = renderedContent || render();
 		const destDir = path.dirname(dest);
 		let hasDestDirExists = true;
 		let savedPath;
@@ -31,6 +31,17 @@ const templateFileRenderer = (src, config) => {
 
 		if (hasDestDirExists) {
 			try {
+				const srcBasename = src.replace(config.directory + '/', '');
+				if (config.postHooks && Object.prototype.hasOwnProperty.call(config.postHooks, srcBasename)) {
+					let hookPath = config.postHooks[srcBasename];
+					if (!path.isAbsolute(hookPath)) {
+						hookPath = path.join(config.cwd, hookPath);
+					}
+					const hook = require(hookPath);
+					const currentContent = fs.readFileSync(dest, 'utf8');
+					content = hook(currentContent, content, config);
+				}
+
 				fs.writeFileSync(dest, content);
 
 				savedPath = dest;
