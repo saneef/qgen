@@ -41,5 +41,6 @@ export function promptIfFileExists(file) {
 			overwrite: constants.WRITE
 		});
 	}
+
 	return r;
 }

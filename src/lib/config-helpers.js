@@ -14,8 +14,10 @@ const createConfigFilePath = (defaultOptions, options) => {
 		if (isRelative(options.config)) {
 			return path.join(defaultOptions.cwd, options.config);
 		}
+
 		return options.config;
 	}
+
 	return path.join(defaultOptions.cwd, defaultOptions.config);
 };
 
@@ -27,10 +29,11 @@ const createConfigFilePath = (defaultOptions, options) => {
 const loadConfig = path => {
 	let config = {};
 
-	if (isFileOrDir(path) === 'file') {
-		// eslint-disable-next-line import/no-dynamic-require
-		config = require(path);
+	if (isFileOrDir(path) !== 'file') {
+		return;
 	}
+
+	config = require(path);
 
 	return config;
 };

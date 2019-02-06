@@ -41,10 +41,10 @@
   },
   "homepage": "https://github.com/alarisprime/qgen#readme",
   "dependencies": {
-    "chalk": "^2.3.1",
-    "globby": "^8.0.1",
-    "handlebars": "^4.0.11",
-    "inquirer": "^6.0.0",
+    "chalk": "^2.4.2",
+    "globby": "^9.0.0",
+    "handlebars": "^4.0.12",
+    "inquirer": "^6.2.2",
     "is-relative": "^1.0.0",
     "meow": "^5.0.0",
     "mkdirp": "^0.5.1",
@@ -61,10 +61,10 @@
     "cpy": "^7.0.0",
     "del": "^3.0.0",
     "execa": "^1.0.0",
-    "npm-watch": "^0.5.0",
-    "semantic-release": "^15.9.14",
-    "xo": "^0.23.0",
-    "travis-deploy-once": "^5.0.0"
+    "npm-watch": "^0.6.0",
+    "semantic-release": "^15.13.3",
+    "xo": "^0.24.0",
+    "travis-deploy-once": "^5.0.11"
   },
   "xo": {
     "esnext": true,

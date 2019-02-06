@@ -50,5 +50,6 @@ function promptIfFileExists(file) {
 			overwrite: _constants2.default.WRITE
 		});
 	}
+
 	return r;
 }
