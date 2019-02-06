@@ -21,11 +21,11 @@ const readyBuildFromSrc = name => {
 };
 
 test('should throws error when template directory is missing,', t => {
-	return t.throws(execa(binPath, [], {cwd: fixturesBasePath}));
+	return t.throwsAsync(execa(binPath, [], {cwd: fixturesBasePath}));
 });
 
 test('should throw error when non-existent template is specified', t => {
-	return t.throws(execa(binPath, ['non_existent_template'], {cwd: fixturesBasePath}));
+	return t.throwsAsync(execa(binPath, ['non_existent_template'], {cwd: fixturesBasePath}));
 });
 
 test('should show help message when executed without any arguments,', async t => {
