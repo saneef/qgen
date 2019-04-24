@@ -1,0 +1,8 @@
+title: qgen
+description: qgen generates files and folders from templates
+google_analytics: 
+show_downloads: true
+theme: jekyll-theme-minimal
+
+gems:
+  - jekyll-mentions
