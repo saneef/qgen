@@ -1,6 +1,6 @@
-![qgen logo](https://cdn.rawgit.com/alarisprime/qgen/master/media/qgen-logo.svg)
+![qgen logo](https://cdn.rawgit.com/saneef/qgen/master/media/qgen-logo.svg)
 
-[![Build Status](https://travis-ci.org/alarisprime/qgen.svg?branch=master)](https://travis-ci.org/alarisprime/qgen) [![Greenkeeper badge](https://badges.greenkeeper.io/alarisprime/qgen.svg)](https://greenkeeper.io/) [![Known Vulnerabilities](https://snyk.io/test/github/alarisprime/qgen/badge.svg?targetFile=package.json)](https://snyk.io/test/github/alarisprime/qgen?targetFile=package.json)
+[![Build Status](https://travis-ci.org/saneef/qgen.svg?branch=master)](https://travis-ci.org/saneef/qgen) [![Greenkeeper badge](https://badges.greenkeeper.io/saneef/qgen.svg)](https://greenkeeper.io/) [![Known Vulnerabilities](https://snyk.io/test/github/saneef/qgen/badge.svg?targetFile=package.json)](https://snyk.io/test/github/saneef/qgen?targetFile=package.json)
 
 qgen generates files and folders from templates. It can generate folder structure as well as file contents.
 
@@ -157,4 +157,4 @@ $ qgen blog.md --filename=`date "+%Y-%m-%d"`
 
 ## License
 
-MIT © [Alaris Prime](https://alarisprime.com/), LLC
+MIT © [Saneef Ansari](https://saneef.com/)

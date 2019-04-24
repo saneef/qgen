@@ -27,7 +27,7 @@
     "semantic-release": "semantic-release",
     "travis-deploy-once": "travis-deploy-once"
   },
-  "repository": "alarisprime/qgen",
+  "repository": "saneef/qgen",
   "keywords": [
     "cli",
     "generator",
@@ -37,9 +37,9 @@
   "author": "Saneef Ansari <hello@saneef.com> (https://saneef.com)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/alarisprime/qgen/issues"
+    "url": "https://github.com/saneef/qgen/issues"
   },
-  "homepage": "https://github.com/alarisprime/qgen#readme",
+  "homepage": "https://github.com/saneef/qgen#readme",
   "dependencies": {
     "chalk": "^2.4.2",
     "globby": "^9.0.0",
