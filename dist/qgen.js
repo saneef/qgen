@@ -1,8 +1,4 @@
-/* eslint-disable no-await-in-loop */
 'use strict';
-/**
- * @module qgen
- */
 
 var _path = require('path');
 
@@ -36,9 +32,51 @@ var _constants2 = _interopRequireDefault(_constants);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
+function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; } /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                            * @module qgen
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                            */
+
 
 const DEFAULT_DESTINATION = './';
+
+const renderAndSaveFile = (files, config) => {
+	files.forEach(f => (0, _templateFileRenderer2.default)(f.src, config).save(f.dest));
+};
+
+const enquireToOverwrite = (fileObjects, overwriteAll) => {
+	const enquireFileAtIndex = (() => {
+		var _ref = _asyncToGenerator(function* (index, fileObjects, overwriteAll) {
+			console.log('👉 enquireFileAtIndex', overwriteAll);
+			if (!fileObjects[index]) {
+				return Promise.resolve([]);
+			}
+
+			const fileObj = {
+				src: fileObjects[index].src,
+				dest: fileObjects[index].dest
+			};
+
+			let overwriteRest;
+
+			if (!overwriteAll) {
+				const answer = yield (0, _promptHelpers.promptIfFileExists)(fileObjects[index].dest);
+				if (answer.overwrite === _constants2.default.ABORT) {
+					return Promise.resolve([{ abort: true }]);
+				}
+
+				overwriteRest = answer.overwrite === _constants2.default.OVERWRITE_ALL;
+			}
+
+			return [fileObj, ...(yield enquireFileAtIndex(index + 1, fileObjects, overwriteAll || overwriteRest))];
+		});
+
+		return function enquireFileAtIndex(_x, _x2, _x3) {
+			return _ref.apply(this, arguments);
+		};
+	})();
+
+	return enquireFileAtIndex(0, fileObjects, overwriteAll);
+};
 
 /**
  * Creates new qgen object
@@ -83,7 +121,7 @@ function qgen(options) {
   * @param  {String} destination Destination path
   */
 	const render = (() => {
-		var _ref = _asyncToGenerator(function* (template, destination) {
+		var _ref2 = _asyncToGenerator(function* (template, destination) {
 			const templatePath = _path2.default.join(config.directory, template);
 			const templateType = (0, _fileHelpers.isFileOrDir)(_path2.default.join(config.cwd, templatePath));
 			const templateConfig = (0, _configHelpers.createTemplateConfig)(config, template, DEFAULT_DESTINATION);
@@ -120,27 +158,17 @@ function qgen(options) {
 				throw new _qgenError2.default(`Template '${templatePath}' not found.`);
 			}
 
-			let abort = false;
-			let overwriteAll = config.force;
-			for (let i = 0; i < fileObjects.length && !abort; i++) {
-				if (!overwriteAll) {
-					const answer = yield (0, _promptHelpers.promptIfFileExists)(fileObjects[i].dest);
+			const filesForRender = yield enquireToOverwrite(fileObjects, config.force);
 
-					if (answer.overwrite === _constants2.default.OVERWRITE_ALL) {
-						overwriteAll = true;
-					} else if (answer.overwrite === _constants2.default.ABORT) {
-						abort = true;
-					}
-				}
-
-				if (!abort) {
-					(0, _templateFileRenderer2.default)(fileObjects[i].src, templateConfig).save(fileObjects[i].dest);
-				}
+			if (!filesForRender.some(function (f) {
+				return f.abort;
+			})) {
+				renderAndSaveFile(filesForRender, templateConfig);
 			}
 		});
 
-		return function render(_x, _x2) {
-			return _ref.apply(this, arguments);
+		return function render(_x4, _x5) {
+			return _ref2.apply(this, arguments);
 		};
 	})();
 

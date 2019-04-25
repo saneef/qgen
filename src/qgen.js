@@ -1,5 +1,3 @@
-/* eslint-disable no-await-in-loop */
-'use strict';
 /**
  * @module qgen
  */
@@ -20,6 +18,39 @@ import {
 import constants from './constants';
 
 const DEFAULT_DESTINATION = './';
+
+const renderAndSaveFile = (files, config) => {
+	files.forEach(f => templateFileRenderer(f.src, config).save(f.dest));
+};
+
+const enquireToOverwrite = (fileObjects, overwriteAll) => {
+	const enquireFileAtIndex = async (index, fileObjects, overwriteAll) => {
+		console.log('👉 enquireFileAtIndex', overwriteAll);
+		if (!fileObjects[index]) {
+			return Promise.resolve([]);
+		}
+
+		const fileObj = {
+			src: fileObjects[index].src,
+			dest: fileObjects[index].dest
+		};
+
+		let overwriteRest;
+
+		if (!overwriteAll) {
+			const answer = await promptIfFileExists(fileObjects[index].dest);
+			if (answer.overwrite === constants.ABORT) {
+				return Promise.resolve([{abort: true}]);
+			}
+
+			overwriteRest = answer.overwrite === constants.OVERWRITE_ALL;
+		}
+
+		return [fileObj, ...(await enquireFileAtIndex(index + 1, fileObjects, overwriteAll || overwriteRest))];
+	};
+
+	return enquireFileAtIndex(0, fileObjects, overwriteAll);
+};
 
 /**
  * Creates new qgen object
@@ -100,22 +131,10 @@ function qgen(options) {
 			throw new QGenError(`Template '${templatePath}' not found.`);
 		}
 
-		let abort = false;
-		let overwriteAll = config.force;
-		for (let i = 0; i < fileObjects.length && !abort; i++) {
-			if (!overwriteAll) {
-				const answer = await promptIfFileExists(fileObjects[i].dest);
+		const filesForRender = await enquireToOverwrite(fileObjects, config.force);
 
-				if (answer.overwrite === constants.OVERWRITE_ALL) {
-					overwriteAll = true;
-				} else if (answer.overwrite === constants.ABORT) {
-					abort = true;
-				}
-			}
-
-			if (!abort) {
-				templateFileRenderer(fileObjects[i].src, templateConfig).save(fileObjects[i].dest);
-			}
+		if (!filesForRender.some(f => f.abort)) {
+			renderAndSaveFile(filesForRender, templateConfig);
 		}
 	};
 
