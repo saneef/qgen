@@ -14,7 +14,7 @@ const cli = meow(`
 	${chalk.bold('Options')}
 		-d, --directory <dir>	Templates directory (defaults to ./qgen-templates)
 		-c, --config <path>	Path to the JSON config file (defaults to ./qgen.json)
-		-f, --force		Overwrite if the desitation files exits
+		-f, --force		Overwrite the destination files
 
 	${chalk.bold('Examples')}
 		$ qgen post ${chalk.dim('# generates the post template in the current folder')}

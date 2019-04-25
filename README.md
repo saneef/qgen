@@ -26,6 +26,7 @@ Usage
 Options
 	--directory=<dir>	Templates directory # Default: ./gqen-templates
 	--config=<path>	Path to the JSON config file # Default: ./qgen.json
+	--force	Overwrite the destination files
 
 Examples
 	$ qgen post # generates the post template in the current folder
