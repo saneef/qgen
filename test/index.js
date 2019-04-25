@@ -101,3 +101,11 @@ test('should generate from a folder', async () => {
 	});
 	await folderEquals(path.join(fixturesBasePath, 'folder-of-files/build'), path.join(fixturesBasePath, 'folder-of-files/expected'));
 });
+
+test('should overwrite file', async () => {
+	await readyBuildFromSrc('overwrite');
+	await execa(binPath, ['blog.md', '--title=A fresh title', '--slug=a-fresh-title', '-f'], {
+		cwd: path.join(fixturesBasePath, './overwrite/build')
+	});
+	await folderEquals(path.join(fixturesBasePath, 'overwrite/build'), path.join(fixturesBasePath, 'overwrite/expected'));
+});

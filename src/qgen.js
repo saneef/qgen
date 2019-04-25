@@ -32,7 +32,8 @@ function qgen(options) {
 		cwd: process.cwd(),
 		directory: 'qgen-templates',
 		config: './qgen.json',
-		helpers: undefined
+		helpers: undefined,
+		force: false
 	};
 
 	const configfilePath = createConfigFilePath(defaultOptions, options);
@@ -100,7 +101,7 @@ function qgen(options) {
 		}
 
 		let abort = false;
-		let overwriteAll = false;
+		let overwriteAll = config.force;
 		for (let i = 0; i < fileObjects.length && !abort; i++) {
 			if (!overwriteAll) {
 				const answer = await promptIfFileExists(fileObjects[i].dest);
