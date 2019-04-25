@@ -42,9 +42,9 @@
   "homepage": "https://github.com/saneef/qgen#readme",
   "dependencies": {
     "chalk": "^2.4.2",
-    "globby": "^9.0.0",
-    "handlebars": "^4.0.12",
-    "inquirer": "^6.2.2",
+    "globby": "^9.2.0",
+    "handlebars": "^4.1.2",
+    "inquirer": "^6.3.1",
     "is-relative": "^1.0.0",
     "meow": "^5.0.0",
     "mkdirp": "^0.5.1",
@@ -58,13 +58,12 @@
     "babel-cli": "^6.26.0",
     "babel-plugin-syntax-async-functions": "^6.13.0",
     "babel-preset-env": "^1.6.1",
-    "cpy": "^7.0.0",
+    "cpy": "^7.2.0",
     "del": "^4.0.0",
     "execa": "^1.0.0",
     "npm-watch": "^0.6.0",
     "semantic-release": "^15.13.3",
-    "xo": "^0.24.0",
-    "travis-deploy-once": "^5.0.11"
+    "xo": "^0.24.0"
   },
   "xo": {
     "esnext": true,
