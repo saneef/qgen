@@ -25,7 +25,6 @@ const renderAndSaveFile = (files, config) => {
 
 const enquireToOverwrite = (fileObjects, overwriteAll) => {
 	const enquireFileAtIndex = async (index, fileObjects, overwriteAll) => {
-		console.log('👉 enquireFileAtIndex', overwriteAll);
 		if (!fileObjects[index]) {
 			return Promise.resolve([]);
 		}

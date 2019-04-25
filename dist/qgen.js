@@ -43,10 +43,9 @@ const renderAndSaveFile = (files, config) => {
 	files.forEach(f => (0, _templateFileRenderer2.default)(f.src, config).save(f.dest));
 };
 
-const enquireToOverwrite = (fileObjects, overwriteAll) => {
+const promptToOverwrite = (fileObjects, overwriteAll) => {
 	const enquireFileAtIndex = (() => {
 		var _ref = _asyncToGenerator(function* (index, fileObjects, overwriteAll) {
-			console.log('👉 enquireFileAtIndex', overwriteAll);
 			if (!fileObjects[index]) {
 				return Promise.resolve([]);
 			}
@@ -158,7 +157,7 @@ function qgen(options) {
 				throw new _qgenError2.default(`Template '${templatePath}' not found.`);
 			}
 
-			const filesForRender = yield enquireToOverwrite(fileObjects, config.force);
+			const filesForRender = yield promptToOverwrite(fileObjects, config.force);
 
 			if (!filesForRender.some(function (f) {
 				return f.abort;
