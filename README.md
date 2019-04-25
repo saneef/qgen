@@ -2,12 +2,12 @@
 
 [![Build Status](https://travis-ci.org/saneef/qgen.svg?branch=master)](https://travis-ci.org/saneef/qgen) [![Greenkeeper badge](https://badges.greenkeeper.io/saneef/qgen.svg)](https://greenkeeper.io/) [![Known Vulnerabilities](https://snyk.io/test/github/saneef/qgen/badge.svg?targetFile=package.json)](https://snyk.io/test/github/saneef/qgen?targetFile=package.json)
 
-qgen generates files and folders from templates. It can generate folder structure as well as file contents.
+qgen generates files and folders from templates.
 
-Some scenarios where qgen can come handy for you:
+Some scenarios where qgen may come handy for you:
 
-- Generate the file for your next Jekyll blog post.
-- Generate files for the new React component in your current project.
+- Generate a Jekyll blog post file from a template.
+- Generate files for a new React component from preset files.
 
 ![using qgen](/media/qgen-example-usge.gif)
 
@@ -125,7 +125,7 @@ _Example:_ `{{pageTitle}}.md` file will be renamed to `today.md`, if you pass ar
 
 ## ‘qgen.json’, The configfile
 
-You can use `qgen.json` to set template directory, default destination, default argument values, etc.
+You can use `qgen.json` to set options like, template directory, default destination, default argument values, etc.
 
 ```javascript
 {
@@ -144,7 +144,7 @@ You can use `qgen.json` to set template directory, default destination, default 
 
 ## Using Handlebars Custom Helpers
 
-You can load custom Handlebars helpers to qgen’s Handlerbars rendering engine. Pass the path to the file which exports the helper functions to the option `helpers`, either through the CLI param or, through config file. Here is a [sample file](./test/fixtures/render-with-helper/src/qgen-helpers.js) which exports two custom helpers.
+You can load custom Handlebars helpers to qgen’s rendering engine. Pass the path to the file which exports the helper functions to the option `helpers`, either through the CLI param or, through config file. Here is a [sample file](./test/fixtures/render-with-helper/src/qgen-helpers.js) which exports two custom helpers.
 
 ## Tips & Tricks
 
