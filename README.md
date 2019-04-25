@@ -1,4 +1,4 @@
-![qgen logo](https://cdn.rawgit.com/saneef/qgen/master/media/qgen-logo.svg)
+![qgen logo](/media/qgen-logo.svg)
 
 [![Build Status](https://travis-ci.org/saneef/qgen.svg?branch=master)](https://travis-ci.org/saneef/qgen) [![Greenkeeper badge](https://badges.greenkeeper.io/saneef/qgen.svg)](https://greenkeeper.io/) [![Known Vulnerabilities](https://snyk.io/test/github/saneef/qgen/badge.svg?targetFile=package.json)](https://snyk.io/test/github/saneef/qgen?targetFile=package.json)
 
