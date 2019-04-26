@@ -38,8 +38,6 @@ var _constants2 = _interopRequireDefault(_constants);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
-
 const DEFAULT_DESTINATION = './';
 
 const renderFiles = (files, config, preview) => {
@@ -54,35 +52,29 @@ const renderFiles = (files, config, preview) => {
 };
 
 const enquireToOverwrite = (fileObjects, overwriteAll) => {
-	const enquireFileAtIndex = (() => {
-		var _ref = _asyncToGenerator(function* (index, fileObjects, overwriteAll) {
-			if (!fileObjects[index]) {
-				return Promise.resolve([]);
+	const enquireFileAtIndex = async (index, fileObjects, overwriteAll) => {
+		if (!fileObjects[index]) {
+			return Promise.resolve([]);
+		}
+
+		let fileObj = fileObjects[index];
+		let overwriteRest;
+
+		if (!overwriteAll) {
+			const answer = await (0, _promptHelpers.promptIfFileExists)(fileObjects[index].dest);
+			if (answer.overwrite === _constants2.default.ABORT) {
+				return Promise.resolve([{ abort: true }]);
 			}
 
-			let fileObj = fileObjects[index];
-			let overwriteRest;
-
-			if (!overwriteAll) {
-				const answer = yield (0, _promptHelpers.promptIfFileExists)(fileObjects[index].dest);
-				if (answer.overwrite === _constants2.default.ABORT) {
-					return Promise.resolve([{ abort: true }]);
-				}
-
-				if (answer.overwrite === _constants2.default.SKIP) {
-					fileObj = null;
-				}
-
-				overwriteRest = answer.overwrite === _constants2.default.OVERWRITE_ALL;
+			if (answer.overwrite === _constants2.default.SKIP) {
+				fileObj = null;
 			}
 
-			return [fileObj, ...(yield enquireFileAtIndex(index + 1, fileObjects, overwriteAll || overwriteRest))].filter(Boolean);
-		});
+			overwriteRest = answer.overwrite === _constants2.default.OVERWRITE_ALL;
+		}
 
-		return function enquireFileAtIndex(_x, _x2, _x3) {
-			return _ref.apply(this, arguments);
-		};
-	})();
+		return [fileObj, ...(await enquireFileAtIndex(index + 1, fileObjects, overwriteAll || overwriteRest))].filter(Boolean);
+	};
 
 	return enquireFileAtIndex(0, fileObjects, overwriteAll);
 };
@@ -130,57 +122,49 @@ function qgen(options) {
   * @param  {String} template The name of the template
   * @param  {String} destination Destination path
   */
-	const render = (() => {
-		var _ref2 = _asyncToGenerator(function* (template, destination) {
-			const templatePath = _path2.default.join(config.directory, template);
-			const templateType = (0, _fileHelpers.isFileOrDir)(_path2.default.join(config.cwd, templatePath));
-			const templateConfig = (0, _configHelpers.createTemplateConfig)(config, template, DEFAULT_DESTINATION);
-			const filepathRenderer = (0, _templateRenderer2.default)({
-				helpers: config.helpers,
-				cwd: config.cwd
-			});
-
-			// Override config dest with passed destination
-			if (destination) {
-				templateConfig.dest = destination;
-			}
-
-			let fileObjects;
-
-			if (templateType === 'directory') {
-				const files = _globby2.default.sync(['**/*'], {
-					cwd: _path2.default.join(config.cwd, templatePath),
-					nodir: true
-				});
-
-				fileObjects = files.map(function (filePath) {
-					return {
-						src: _path2.default.join(templatePath, filePath),
-						dest: _path2.default.join(templateConfig.cwd, templateConfig.dest, filepathRenderer.render(filePath, config))
-					};
-				});
-			} else if (templateType === 'file') {
-				fileObjects = [{
-					src: templatePath,
-					dest: _path2.default.join(templateConfig.cwd, templateConfig.dest, template)
-				}];
-			} else {
-				throw new _qgenError2.default(`Template '${templatePath}' not found.`);
-			}
-
-			const filesForRender = config.preview ? fileObjects : yield enquireToOverwrite(fileObjects, config.force);
-
-			if (!filesForRender.some(function (f) {
-				return f.abort;
-			})) {
-				renderFiles(filesForRender, templateConfig, config.preview);
-			}
+	const render = async (template, destination) => {
+		const templatePath = _path2.default.join(config.directory, template);
+		const templateType = (0, _fileHelpers.isFileOrDir)(_path2.default.join(config.cwd, templatePath));
+		const templateConfig = (0, _configHelpers.createTemplateConfig)(config, template, DEFAULT_DESTINATION);
+		const filepathRenderer = (0, _templateRenderer2.default)({
+			helpers: config.helpers,
+			cwd: config.cwd
 		});
 
-		return function render(_x4, _x5) {
-			return _ref2.apply(this, arguments);
-		};
-	})();
+		// Override config dest with passed destination
+		if (destination) {
+			templateConfig.dest = destination;
+		}
+
+		let fileObjects;
+
+		if (templateType === 'directory') {
+			const files = _globby2.default.sync(['**/*'], {
+				cwd: _path2.default.join(config.cwd, templatePath),
+				nodir: true
+			});
+
+			fileObjects = files.map(filePath => {
+				return {
+					src: _path2.default.join(templatePath, filePath),
+					dest: _path2.default.join(templateConfig.cwd, templateConfig.dest, filepathRenderer.render(filePath, config))
+				};
+			});
+		} else if (templateType === 'file') {
+			fileObjects = [{
+				src: templatePath,
+				dest: _path2.default.join(templateConfig.cwd, templateConfig.dest, template)
+			}];
+		} else {
+			throw new _qgenError2.default(`Template '${templatePath}' not found.`);
+		}
+
+		const filesForRender = config.preview ? fileObjects : await enquireToOverwrite(fileObjects, config.force);
+
+		if (!filesForRender.some(f => f.abort)) {
+			renderFiles(filesForRender, templateConfig, config.preview);
+		}
+	};
 
 	return Object.freeze({
 		templates,
