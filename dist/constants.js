@@ -8,7 +8,8 @@ const constants = {
 	WRITE: 'WRITE',
 	OVERWRITE: 'OVERWRITE',
 	OVERWRITE_ALL: 'OVERWRITE_ALL',
-	ABORT: 'ABORT'
+	ABORT: 'ABORT',
+	SKIP: 'SKIP'
 };
 
 exports.default = constants;
