@@ -3,10 +3,11 @@
 const path = require('path');
 const Handlebars = require('handlebars');
 
-const templateRenderer = function templateRenderer(spec = {}) {
-	let helpers = spec.helpers,
-	    cwd = spec.cwd;
-
+const templateRenderer = function (spec = {}) {
+	let {
+		helpers,
+		cwd
+	} = spec;
 
 	const handlebars = Handlebars;
 

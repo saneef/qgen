@@ -2,10 +2,7 @@
 
 const path = require('path');
 const isRelative = require('is-relative');
-
-var _require = require('./file-helpers');
-
-const isFileOrDir = _require.isFileOrDir;
+const { isFileOrDir } = require('./file-helpers');
 
 /**
  * Creates path to the config file
@@ -13,7 +10,6 @@ const isFileOrDir = _require.isFileOrDir;
  * @param  {Object} options The user set options
  * @return {string} The path to config file.
  */
-
 const createConfigFilePath = (defaultOptions, options) => {
 	if (options.config) {
 		if (isRelative(options.config)) {
