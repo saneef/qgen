@@ -31,6 +31,10 @@ function promptForOverwrite(file) {
 			key: 'a',
 			name: 'Overwrite this one and all next',
 			value: _constants2.default.OVERWRITE_ALL
+		}, {
+			key: 's',
+			name: 'Skip',
+			value: _constants2.default.SKIP
 		}, new _inquirer2.default.Separator(), {
 			key: 'x',
 			name: 'Abort',

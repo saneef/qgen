@@ -50,11 +50,7 @@ const enquireToOverwrite = (fileObjects, overwriteAll) => {
 				return Promise.resolve([]);
 			}
 
-			const fileObj = {
-				src: fileObjects[index].src,
-				dest: fileObjects[index].dest
-			};
-
+			let fileObj = fileObjects[index];
 			let overwriteRest;
 
 			if (!overwriteAll) {
@@ -63,10 +59,14 @@ const enquireToOverwrite = (fileObjects, overwriteAll) => {
 					return Promise.resolve([{ abort: true }]);
 				}
 
+				if (answer.overwrite === _constants2.default.SKIP) {
+					fileObj = null;
+				}
+
 				overwriteRest = answer.overwrite === _constants2.default.OVERWRITE_ALL;
 			}
 
-			return [fileObj, ...(yield enquireFileAtIndex(index + 1, fileObjects, overwriteAll || overwriteRest))];
+			return [fileObj, ...(yield enquireFileAtIndex(index + 1, fileObjects, overwriteAll || overwriteRest))].filter(Boolean);
 		});
 
 		return function enquireFileAtIndex(_x, _x2, _x3) {

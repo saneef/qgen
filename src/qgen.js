@@ -29,11 +29,7 @@ const enquireToOverwrite = (fileObjects, overwriteAll) => {
 			return Promise.resolve([]);
 		}
 
-		const fileObj = {
-			src: fileObjects[index].src,
-			dest: fileObjects[index].dest
-		};
-
+		let fileObj = fileObjects[index];
 		let overwriteRest;
 
 		if (!overwriteAll) {
@@ -42,10 +38,14 @@ const enquireToOverwrite = (fileObjects, overwriteAll) => {
 				return Promise.resolve([{abort: true}]);
 			}
 
+			if (answer.overwrite === constants.SKIP) {
+				fileObj = null;
+			}
+
 			overwriteRest = answer.overwrite === constants.OVERWRITE_ALL;
 		}
 
-		return [fileObj, ...(await enquireFileAtIndex(index + 1, fileObjects, overwriteAll || overwriteRest))];
+		return [fileObj, ...(await enquireFileAtIndex(index + 1, fileObjects, overwriteAll || overwriteRest))].filter(Boolean);
 	};
 
 	return enquireFileAtIndex(0, fileObjects, overwriteAll);

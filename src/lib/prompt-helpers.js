@@ -20,6 +20,11 @@ export function promptForOverwrite(file) {
 				name: 'Overwrite this one and all next',
 				value: constants.OVERWRITE_ALL
 			},
+			{
+				key: 's',
+				name: 'Skip',
+				value: constants.SKIP
+			},
 			new inquirer.Separator(),
 			{
 				key: 'x',
