@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * @module qgen
  */
@@ -15,12 +17,20 @@ import {
 	loadConfig,
 	createTemplateConfig
 } from './lib/config-helpers';
+import {prettyPrintFile} from './lib/log-helpers';
 import constants from './constants';
 
 const DEFAULT_DESTINATION = './';
 
-const renderAndSaveFile = (files, config) => {
-	files.forEach(f => templateFileRenderer(f.src, config).save(f.dest));
+const renderFiles = (files, config, preview) => {
+	files.forEach(f => {
+		const renderObj = templateFileRenderer(f.src, config);
+		if (preview) {
+			prettyPrintFile(f.dest, renderObj.getContents());
+		} else {
+			renderObj.save(f.dest);
+		}
+	});
 };
 
 const enquireToOverwrite = (fileObjects, overwriteAll) => {
@@ -63,7 +73,8 @@ function qgen(options) {
 		directory: 'qgen-templates',
 		config: './qgen.json',
 		helpers: undefined,
-		force: false
+		force: false,
+		preview: false
 	};
 
 	const configfilePath = createConfigFilePath(defaultOptions, options);
@@ -130,10 +141,10 @@ function qgen(options) {
 			throw new QGenError(`Template '${templatePath}' not found.`);
 		}
 
-		const filesForRender = await enquireToOverwrite(fileObjects, config.force);
+		const filesForRender = config.preview ? fileObjects : await enquireToOverwrite(fileObjects, config.force);
 
 		if (!filesForRender.some(f => f.abort)) {
-			renderAndSaveFile(filesForRender, templateConfig);
+			renderFiles(filesForRender, templateConfig, config.preview);
 		}
 	};
 

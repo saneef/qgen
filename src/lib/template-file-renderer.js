@@ -19,6 +19,8 @@ const templateFileRenderer = (src, config) => {
 		return renderedContent;
 	};
 
+	const getContents = () => renderedContent || render();
+
 	const save = dest => {
 		const content = renderedContent || render();
 		const destDir = path.dirname(dest);
@@ -44,7 +46,8 @@ const templateFileRenderer = (src, config) => {
 
 	return Object.freeze({
 		render,
-		save
+		save,
+		getContents
 	});
 };
 

@@ -1,5 +1,9 @@
 'use strict';
 
+/**
+ * @module qgen
+ */
+
 var _path = require('path');
 
 var _path2 = _interopRequireDefault(_path);
@@ -26,21 +30,27 @@ var _promptHelpers = require('./lib/prompt-helpers');
 
 var _configHelpers = require('./lib/config-helpers');
 
+var _logHelpers = require('./lib/log-helpers');
+
 var _constants = require('./constants');
 
 var _constants2 = _interopRequireDefault(_constants);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; } /**
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                            * @module qgen
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                            */
-
+function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
 const DEFAULT_DESTINATION = './';
 
-const renderAndSaveFile = (files, config) => {
-	files.forEach(f => (0, _templateFileRenderer2.default)(f.src, config).save(f.dest));
+const renderFiles = (files, config, preview) => {
+	files.forEach(f => {
+		const renderObj = (0, _templateFileRenderer2.default)(f.src, config);
+		if (preview) {
+			(0, _logHelpers.prettyPrintFile)(f.dest, renderObj.getContents());
+		} else {
+			renderObj.save(f.dest);
+		}
+	});
 };
 
 const enquireToOverwrite = (fileObjects, overwriteAll) => {
@@ -89,7 +99,8 @@ function qgen(options) {
 		directory: 'qgen-templates',
 		config: './qgen.json',
 		helpers: undefined,
-		force: false
+		force: false,
+		preview: false
 	};
 
 	const configfilePath = (0, _configHelpers.createConfigFilePath)(defaultOptions, options);
@@ -157,12 +168,12 @@ function qgen(options) {
 				throw new _qgenError2.default(`Template '${templatePath}' not found.`);
 			}
 
-			const filesForRender = yield enquireToOverwrite(fileObjects, config.force);
+			const filesForRender = config.preview ? fileObjects : yield enquireToOverwrite(fileObjects, config.force);
 
 			if (!filesForRender.some(function (f) {
 				return f.abort;
 			})) {
-				renderAndSaveFile(filesForRender, templateConfig);
+				renderFiles(filesForRender, templateConfig, config.preview);
 			}
 		});
 

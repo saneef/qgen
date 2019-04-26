@@ -109,3 +109,15 @@ test('should overwrite file', async () => {
 	});
 	await folderEquals(path.join(fixturesBasePath, 'overwrite/build'), path.join(fixturesBasePath, 'overwrite/expected'));
 });
+
+test('should preview the files', async t => {
+	await readyBuildFromSrc('preview');
+	const result = await execa(binPath, ['react-component', './Dummy', '--title=Dummy', '--className=dummy', '-p'], {
+		cwd: path.join(fixturesBasePath, './preview/build')
+	});
+	t.regex(result.stdout, /build\/Dummy\/Dummy\.jsx/g);
+	t.regex(result.stdout, /<div>Dummy<\/div>/g);
+	t.regex(result.stdout, /build\/Dummy\/scss\/Dummy\.scss/g);
+	t.regex(result.stdout, /\/\/ \.dummy {}/g);
+	await folderEquals(path.join(fixturesBasePath, 'preview/build'), path.join(fixturesBasePath, 'preview/expected'));
+});

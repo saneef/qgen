@@ -15,6 +15,7 @@ const cli = meow(`
 		-d, --directory <dir>	Templates directory (defaults to ./qgen-templates)
 		-c, --config <path>	Path to the JSON config file (defaults to ./qgen.json)
 		-f, --force		Overwrite the destination files
+		-p, --preview	Preview the results without making any changes on files
 
 	${chalk.bold('Examples')}
 		$ qgen post ${chalk.dim('# generates the post template in the current folder')}
@@ -22,15 +23,18 @@ const cli = meow(`
 		$ qgen post ./pages --page-title "Hello World" ${chalk.dim('# generates the post template in inside ./pages with data field pageTitle="Hello World" to the template rendering engine')}
 `, {
 	flags: {
+		config: {
+			alias: 'c'
+		},
 		directory: {
 			type: 'string',
 			alias: 'd'
 		},
-		config: {
-			alias: 'c'
-		},
 		force: {
 			alias: 'f'
+		},
+		preview: {
+			alias: 'p'
 		}
 	}
 });
