@@ -1,6 +1,8 @@
 'use strict';
 
 const fs = require('fs');
+const path = require('path');
+const isRelative = require('is-relative');
 
 /**
  * Check if a path points to a file or a directory
@@ -23,6 +25,15 @@ function isFileOrDir(filePath) {
 	return r;
 }
 
+function getRelativePath(filePath, root = process.cwd()) {
+	if (isRelative(filePath)) {
+		return filePath;
+	}
+
+	return `.${path.sep}${path.relative(root, filePath)}`;
+}
+
 module.exports = {
-	isFileOrDir
+	isFileOrDir,
+	getRelativePath
 };
