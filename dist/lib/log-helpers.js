@@ -14,7 +14,6 @@ const prettyPrintFilePath = (path, prefix = '') => {
   const relativePath = getRelativePath(path);
 
   console.log(`${prefix}${chalk.blue.bold(relativePath)}`);
-  console.log(redent('	', 0));
 };
 
 /**
@@ -23,6 +22,7 @@ const prettyPrintFilePath = (path, prefix = '') => {
  * @return {undefined}
  */
 const prettyPrintContents = contents => {
+  console.log(redent('	', 0));
   console.log(redent(contents, 2));
   console.log(redent('	', 0));
 };
