@@ -50,7 +50,7 @@
     "mkdirp": "^0.5.1",
     "nested-error-stacks": "^2.1.0",
     "redent": "^3.0.0",
-    "trim-newlines": "^2.0.0"
+    "trim-newlines": "^3.0.0"
   },
   "devDependencies": {
     "assert-dir-equal": "^1.1.0",
