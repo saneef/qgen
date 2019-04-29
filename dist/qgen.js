@@ -48,6 +48,7 @@ const renderFiles = (files, config, preview) => {
 			(0, _logHelpers.prettyPrintContents)(renderObj.getContents());
 		} else {
 			renderObj.save(f.dest);
+			(0, _logHelpers.prettyPrintFilePath)(f.dest, 'Generated: ');
 		}
 	});
 };
