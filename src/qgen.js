@@ -30,6 +30,7 @@ const renderFiles = (files, config, preview) => {
 			prettyPrintContents(renderObj.getContents());
 		} else {
 			renderObj.save(f.dest);
+			prettyPrintFilePath(f.dest, 'Generated: ');
 		}
 	});
 };
