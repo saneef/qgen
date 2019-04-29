@@ -17,7 +17,7 @@ import {
 	loadConfig,
 	createTemplateConfig
 } from './lib/config-helpers';
-import {prettyPrintFile} from './lib/log-helpers';
+import {prettyPrintFilePath, prettyPrintContents} from './lib/log-helpers';
 import constants from './constants';
 
 const DEFAULT_DESTINATION = './';
@@ -26,7 +26,8 @@ const renderFiles = (files, config, preview) => {
 	files.forEach(f => {
 		const renderObj = templateFileRenderer(f.src, config);
 		if (preview) {
-			prettyPrintFile(f.dest, renderObj.getContents());
+			prettyPrintFilePath(f.dest);
+			prettyPrintContents(renderObj.getContents());
 		} else {
 			renderObj.save(f.dest);
 		}

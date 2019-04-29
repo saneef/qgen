@@ -44,7 +44,8 @@ const renderFiles = (files, config, preview) => {
 	files.forEach(f => {
 		const renderObj = (0, _templateFileRenderer2.default)(f.src, config);
 		if (preview) {
-			(0, _logHelpers.prettyPrintFile)(f.dest, renderObj.getContents());
+			(0, _logHelpers.prettyPrintFilePath)(f.dest);
+			(0, _logHelpers.prettyPrintContents)(renderObj.getContents());
 		} else {
 			renderObj.save(f.dest);
 		}
