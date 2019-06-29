@@ -42,7 +42,7 @@
   "homepage": "https://github.com/saneef/qgen#readme",
   "dependencies": {
     "chalk": "^2.4.2",
-    "globby": "^9.2.0",
+    "globby": "^10.0.0",
     "handlebars": "^4.1.2",
     "inquirer": "^6.4.1",
     "is-relative": "^1.0.0",
