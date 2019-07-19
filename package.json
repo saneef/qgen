@@ -73,6 +73,9 @@
     ]
   },
   "ava": {
+    "files": [
+      "test/*.js"
+    ],
     "failWithoutAssertions": false
   },
   "snyk": true
