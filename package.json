@@ -55,7 +55,7 @@
   },
   "devDependencies": {
     "assert-dir-equal": "^1.1.0",
-    "ava": "^1.4.1",
+    "ava": "^2.2.0",
     "babel-cli": "^6.26.0",
     "babel-plugin-syntax-async-functions": "^6.13.0",
     "babel-preset-env": "^1.7.0",
@@ -73,6 +73,9 @@
     ]
   },
   "ava": {
+    "files": [
+      "test/*.js"
+    ],
     "failWithoutAssertions": false
   },
   "snyk": true
