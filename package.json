@@ -44,7 +44,7 @@
   "dependencies": {
     "chalk": "^2.4.2",
     "globby": "^10.0.1",
-    "handlebars": "^4.2.1",
+    "handlebars": "^4.3.1",
     "inquirer": "^7.0.0",
     "is-relative": "^1.0.0",
     "meow": "^5.0.0",
