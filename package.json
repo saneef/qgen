@@ -64,7 +64,7 @@
     "execa": "^2.0.4",
     "npm-watch": "^0.6.0",
     "semantic-release": "^15.13.24",
-    "xo": "^0.24.0"
+    "xo": "^0.25.0"
   },
   "xo": {
     "esnext": true,
