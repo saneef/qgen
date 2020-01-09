@@ -63,7 +63,7 @@
     "del": "^5.1.0",
     "execa": "^3.4.0",
     "npm-watch": "^0.6.0",
-    "semantic-release": "^15.13.31",
+    "semantic-release": "^16.0.0",
     "xo": "^0.25.3"
   },
   "xo": {
