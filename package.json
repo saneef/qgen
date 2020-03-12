@@ -48,7 +48,7 @@
     "inquirer": "^7.0.0",
     "is-relative": "^1.0.0",
     "meow": "^6.0.0",
-    "mkdirp": "^0.5.1",
+    "mkdirp": "^1.0.0",
     "nested-error-stacks": "^2.1.0",
     "redent": "^3.0.0",
     "snyk": "^1.290.1"
