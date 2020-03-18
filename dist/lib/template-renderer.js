@@ -19,8 +19,8 @@ const templateRenderer = function (spec = {}) {
 		handlebars.registerHelper(require(helpers));
 	}
 
-	const render = (str, context) => {
-		const compiledTemplate = handlebars.compile(str);
+	const render = (string, context) => {
+		const compiledTemplate = handlebars.compile(string);
 		return compiledTemplate(context);
 	};
 
