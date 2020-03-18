@@ -24,12 +24,12 @@ const DEFAULT_DESTINATION = './';
 
 const renderFiles = (files, config, preview) => {
 	files.forEach(f => {
-		const renderObj = templateFileRenderer(f.src, config);
+		const renderObject = templateFileRenderer(f.src, config);
 		if (preview) {
 			prettyPrintFilePath(f.dest);
-			prettyPrintContents(renderObj.getContents());
+			prettyPrintContents(renderObject.getContents());
 		} else {
-			renderObj.save(f.dest);
+			renderObject.save(f.dest);
 			prettyPrintFilePath(f.dest, 'Generated: ');
 		}
 	});
@@ -41,7 +41,7 @@ const enquireToOverwrite = (fileObjects, overwriteAll) => {
 			return Promise.resolve([]);
 		}
 
-		let fileObj = fileObjects[index];
+		let fileObject = fileObjects[index];
 		let overwriteRest;
 
 		if (!overwriteAll) {
@@ -51,13 +51,13 @@ const enquireToOverwrite = (fileObjects, overwriteAll) => {
 			}
 
 			if (answer.overwrite === constants.SKIP) {
-				fileObj = null;
+				fileObject = null;
 			}
 
 			overwriteRest = answer.overwrite === constants.OVERWRITE_ALL;
 		}
 
-		return [fileObj, ...(await enquireFileAtIndex(index + 1, fileObjects, overwriteAll || overwriteRest))].filter(Boolean);
+		return [fileObject, ...(await enquireFileAtIndex(index + 1, fileObjects, overwriteAll || overwriteRest))].filter(Boolean);
 	};
 
 	return enquireFileAtIndex(0, fileObjects, overwriteAll);
@@ -85,7 +85,7 @@ function qgen(options) {
 
 	/** Throw error if qgen template directory is missing */
 	if (isFileOrDir(config.directory) !== 'directory') {
-		throw new QGenError(`qgen templates directory '${config.directory}' not found.`);
+		throw new QGenError(`qgen templates directory ’${config.directory}’ not found.`);
 	}
 
 	/**
@@ -140,7 +140,7 @@ function qgen(options) {
 				dest: path.join(templateConfig.cwd, templateConfig.dest, template)
 			}];
 		} else {
-			throw new QGenError(`Template '${templatePath}' not found.`);
+			throw new QGenError(`Template ’${templatePath}’ not found.`);
 		}
 
 		const filesForRender = config.preview ? fileObjects : await enquireToOverwrite(fileObjects, config.force);

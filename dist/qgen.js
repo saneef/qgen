@@ -42,12 +42,12 @@ const DEFAULT_DESTINATION = './';
 
 const renderFiles = (files, config, preview) => {
 	files.forEach(f => {
-		const renderObj = (0, _templateFileRenderer2.default)(f.src, config);
+		const renderObject = (0, _templateFileRenderer2.default)(f.src, config);
 		if (preview) {
 			(0, _logHelpers.prettyPrintFilePath)(f.dest);
-			(0, _logHelpers.prettyPrintContents)(renderObj.getContents());
+			(0, _logHelpers.prettyPrintContents)(renderObject.getContents());
 		} else {
-			renderObj.save(f.dest);
+			renderObject.save(f.dest);
 			(0, _logHelpers.prettyPrintFilePath)(f.dest, 'Generated: ');
 		}
 	});
@@ -59,7 +59,7 @@ const enquireToOverwrite = (fileObjects, overwriteAll) => {
 			return Promise.resolve([]);
 		}
 
-		let fileObj = fileObjects[index];
+		let fileObject = fileObjects[index];
 		let overwriteRest;
 
 		if (!overwriteAll) {
@@ -69,13 +69,13 @@ const enquireToOverwrite = (fileObjects, overwriteAll) => {
 			}
 
 			if (answer.overwrite === _constants2.default.SKIP) {
-				fileObj = null;
+				fileObject = null;
 			}
 
 			overwriteRest = answer.overwrite === _constants2.default.OVERWRITE_ALL;
 		}
 
-		return [fileObj, ...(await enquireFileAtIndex(index + 1, fileObjects, overwriteAll || overwriteRest))].filter(Boolean);
+		return [fileObject, ...(await enquireFileAtIndex(index + 1, fileObjects, overwriteAll || overwriteRest))].filter(Boolean);
 	};
 
 	return enquireFileAtIndex(0, fileObjects, overwriteAll);
@@ -103,7 +103,7 @@ function qgen(options) {
 
 	/** Throw error if qgen template directory is missing */
 	if ((0, _fileHelpers.isFileOrDir)(config.directory) !== 'directory') {
-		throw new _qgenError2.default(`qgen templates directory '${config.directory}' not found.`);
+		throw new _qgenError2.default(`qgen templates directory ’${config.directory}’ not found.`);
 	}
 
 	/**
@@ -158,7 +158,7 @@ function qgen(options) {
 				dest: _path2.default.join(templateConfig.cwd, templateConfig.dest, template)
 			}];
 		} else {
-			throw new _qgenError2.default(`Template '${templatePath}' not found.`);
+			throw new _qgenError2.default(`Template ’${templatePath}’ not found.`);
 		}
 
 		const filesForRender = config.preview ? fileObjects : await enquireToOverwrite(fileObjects, config.force);
