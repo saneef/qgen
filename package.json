@@ -51,7 +51,7 @@
     "mkdirp": "^1.0.4",
     "nested-error-stacks": "^2.1.0",
     "redent": "^3.0.0",
-    "snyk": "^1.316.2"
+    "snyk": "^1.323.0"
   },
   "devDependencies": {
     "assert-dir-equal": "^1.1.0",
